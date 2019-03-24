@@ -1,0 +1,24 @@
+{
+    "name": "auth-service",
+    "version": "1.0.0",
+    "description": "Provides authentication tokens and revokation system",
+    "author": "claudiocup@gmail.com",
+    "license": "MIT",
+    "scripts": {
+        "tsc:watch": "tsc -w",
+        "tsc:build": "tsc",
+        "serve": "nodemon --inspect --watch dist/ -d 1 ./dist/main.js",
+        "start": "node ./dist/main.js"
+    },
+    "dependencies": {
+        "express": "^4.16.4",
+        "jsonwebtoken": "^8.5.1"
+    },
+    "devDependencies": {
+        "@types/express": "^4.16.1",
+        "@types/jsonwebtoken": "^8.3.2",
+        "@types/node": "~10.5.1",
+        "nodemon": "~1.17.5",
+        "typescript": "~2.9.2"
+    }
+}

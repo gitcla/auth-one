@@ -12,8 +12,8 @@ npm run serve to start the server (under the hood it runs ./dist/main.js using n
 
 # TODO
 
+- Use routing to configure endpoints
 - Generate production quality build
 - Implement invalidate for logout purposes
 - Implement invalidate-all for security purposes
-- Use PEM certificates for token sign and validation
 - Use a REDIS or Mongo Database to store users data and issued tokens

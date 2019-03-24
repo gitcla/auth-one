@@ -1,11 +1,12 @@
 import { User } from './user';
 import { PayloadData } from './payload-data';
+import PRIVATE_KEY from './private-key';
+import PUBLIC_KEY from './public-key';
 import jwt = require('jsonwebtoken');
 import crypto = require('crypto');
 
 export class AuthService {
 
-    private readonly SECRET_KEY = 'my_private_key'; // TODO: use certs
     private readonly EXPIRATION_TIME = '5m';
 
     private readonly _users: User[];
@@ -23,15 +24,15 @@ export class AuthService {
             // TODO: use an indexed repository
             const user = this._users.find(u => u.username === username && u.password === encodedPassword);
 
-            if (user === undefined) { throw new Error('Could not authenticate'); } 
+            if (user === undefined) { throw new Error('Could not authenticate'); }
 
             const token = this.generateToken(user);
             user.issuedTokens.unshift(token); // TODO: use a buffer of no more than XX elements
 
             console.log('Token generated');
 
-            return token;    
-        } catch(err) {
+            return token;
+        } catch (err) {
             console.log(err.message);
             return null;
         }
@@ -41,7 +42,7 @@ export class AuthService {
         console.log('Validate...');
 
         try {
-            const payload = jwt.verify(token, this.SECRET_KEY);
+            const payload = jwt.verify(token, PUBLIC_KEY);
             console.log('Token is valid');
             console.log(payload);
 
@@ -57,7 +58,7 @@ export class AuthService {
         console.log('Renew...');
 
         try {
-            const payload: any = jwt.verify(token, this.SECRET_KEY, { ignoreExpiration: true });
+            const payload: any = jwt.verify(token, PUBLIC_KEY, { ignoreExpiration: true });
             const user = this._users.find(u => u.username === payload.data.username);
 
             if (user === undefined) { throw new Error('User not found'); }
@@ -84,7 +85,11 @@ export class AuthService {
             username: user.username,
             fullName: user.fullName
         };
-        return jwt.sign({ data: payloadData }, this.SECRET_KEY, { expiresIn: this.EXPIRATION_TIME });
+        return jwt.sign(
+            { data: payloadData },
+            PRIVATE_KEY,
+            { algorithm: 'RS256', expiresIn: this.EXPIRATION_TIME }
+        );
     }
 
     private hashPassword(plainPassword: string): string {

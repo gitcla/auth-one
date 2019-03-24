@@ -6,3 +6,5 @@ curl \
 	--data '{ "username": "mario@luigi.org", "password": "secure" }' \
 	http://localhost:1221/auth/login
 
+echo
+echo

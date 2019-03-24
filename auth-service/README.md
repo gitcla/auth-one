@@ -12,8 +12,12 @@ npm run serve to start the server (under the hood it runs ./dist/main.js using n
 
 # TODO
 
-- Use routing to configure endpoints
-- Generate production quality build
+- Configure express routing and various security aspects
+- Remove validate endpoint (this does not make sense in a standard use case)
+- Define correct error status codes
 - Implement invalidate for logout purposes
 - Implement invalidate-all for security purposes
+- Move user-info on a separate service
 - Use a REDIS or Mongo Database to store users data and issued tokens
+- Rename renew -> refresh
+- Generate production quality build

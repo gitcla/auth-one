@@ -2,6 +2,7 @@
 
 import express = require('express');
 import bodyParser = require('body-parser');
+import jwt = require('jsonwebtoken');
 
 import CONFIG from './config';
 import DATA from './users-data';
@@ -47,6 +48,25 @@ app.post('/auth/token/renew', (req, res) => {
         res.status(200).send(renewedToken);
     } else {
         res.status(403).send('Could not renew token');
+    }
+});
+
+// TODO: it should be moved on a separate service
+app.get('/user/info', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+
+    try {
+        const authToken: any = req.headers['auth-token'];
+        if (authToken === undefined) { throw new Error('No Auth Token provided'); }
+        const userInfo = authService.getUserInfos(authToken);
+
+        res.status(200).json(userInfo);
+    } catch (err) {
+        if (err.name === jwt.TokenExpiredError.name) {
+            res.status(399).json('Token expired');
+        } else {
+            res.status(599).json('Could not provide user infos');
+        }
     }
 });
 

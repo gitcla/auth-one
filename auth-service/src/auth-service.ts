@@ -42,9 +42,9 @@ export class AuthService {
         console.log('Validate...');
 
         try {
-            const payload = jwt.verify(token, PUBLIC_KEY);
+            const decodedToken = jwt.verify(token, PUBLIC_KEY);
             console.log('Token is valid');
-            console.log(payload);
+            console.log(decodedToken);
 
             return true;
         } catch (err) {
@@ -58,8 +58,8 @@ export class AuthService {
         console.log('Renew...');
 
         try {
-            const payload: any = jwt.verify(token, PUBLIC_KEY, { ignoreExpiration: true });
-            const user = this._users.find(u => u.username === payload.data.username);
+            const decodedToken: any = jwt.verify(token, PUBLIC_KEY, { ignoreExpiration: true });
+            const user = this._users.find(u => u.username === decodedToken.data.username);
 
             if (user === undefined) { throw new Error('User not found'); }
 
@@ -78,6 +78,12 @@ export class AuthService {
 
             return null;
         }
+    }
+
+    // TODO: should be moved on a separate service
+    getUserInfos(token: string): PayloadData {
+        const decodedToken: any = jwt.verify(token, PUBLIC_KEY);
+        return decodedToken.data;
     }
 
     private generateToken(user: User): string {

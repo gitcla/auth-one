@@ -1,7 +1,7 @@
 {
     "name": "auth-service",
     "version": "1.0.0",
-    "description": "Provides authentication tokens and revokation system",
+    "description": "Provides authentication tokens and revokation architecture",
     "author": "claudiocup@gmail.com",
     "license": "MIT",
     "scripts": {

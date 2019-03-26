@@ -70,6 +70,10 @@ app.get('/user/info', (req, res) => {
     }
 });
 
+app.use((req, res) => {
+    res.sendStatus(404);
+});
+
 app.listen(CONFIG.PORT, () => {
     console.log(`server listening on http://${CONFIG.HOST}:${CONFIG.PORT}/`);
 });

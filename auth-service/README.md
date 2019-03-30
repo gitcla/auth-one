@@ -12,7 +12,8 @@ npm run serve to start the server (under the hood it runs ./dist/main.js using n
 
 # TODO
 
-- Use a REDIS or Mongo Database to store users data and issued tokens
+- Use a Mongo Database to store users data and issued tokens
+- Users and Tokens must be moved on a Repository class
 - Configure express for a production environment
 - Implement invalidate for logout purposes
 - Implement invalidate-all for security purposes

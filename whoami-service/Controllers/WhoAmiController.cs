@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using whoami_service.Models;
-using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Http;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Logging;
@@ -16,6 +14,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto.Parameters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using whoami_service.Models;
 
 namespace whoami_service.Controllers
 {
@@ -37,11 +36,11 @@ WQIDAQAB
         [HttpGet]
         public ActionResult<UserModel> Get()
         {
-            // For debug purposes
+            // For debugging purposes
             IdentityModelEventSource.ShowPII = true;
 
             // Should arrive on header request
-            string token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJuYW1lIjoibWFyaW9AbHVpZ2kub3JnIiwiZnVsbE5hbWUiOiJNYXJpbyBSb3NzaSJ9LCJpYXQiOjE1NTk0MTE3OTgsImV4cCI6MTU1OTQxMjA5OH0.bMRrPp_VVttDq6TsnhFyQSx1hyJDRBceeeysGZxPV3L1g0VbrbKwZdvtzMImytK5QKkIc1DaD32CJWRJuzRg54v5sXhV9ew4PcG8ax_54khoNLEA7enQSTH5fMiGPILBDHFWg99X-6Xp17vtbtK9AaQ1c0nwjrv9UTf_hLWk41lqr_blXwOMG3hzJYKGNTas1Asg6XXGacPxv2fE3E73IwQ8ajDkGWgnYHzd6QMPtuGxhAKXp6Uxb3gc99x6vmlUtMI-I6urx7g7qNxXi5SsXeqNm3ZS47vqnzgjwaUjlmLqkEv5TZJLSX_ScOOdHOcGkT1oBFjn5sUhviZcDl6pOQ";
+            string token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJuYW1lIjoibWFyaW9AbHVpZ2kub3JnIiwiZnVsbE5hbWUiOiJNYXJpbyBSb3NzaSJ9LCJpYXQiOjE1NTk0MjM1MjEsImV4cCI6MTU1OTQyMzgyMX0.RO2eXaMPTwSesrnGY2FZw7rB3sLcXyyiXawX6OQ2qcZEHvIxP4jjE8FwGtK8pQ2dFA5MAEcMVu_Tu90RabQT7cuuvGL6j_WPx1MZdeZ5tF40OLnuf-j-41_K7J6aYLU6WgNyCblC-UYYMGIupjRutVmh3qdVp2MWXPkh_u-Vj-R0Yv51u6RnG1JUwM7qYCUNmGQi3x7JyjfYXCaqctu2UCJKRjvDwvdFgAJhXDmWrfSAEHZ_haUFX-uuN0gEnAa3-HfUFBeKDykPv_RoBglhYsDrLxoRuLdeD91cqyZLlHuhx5pqjZo5xTWXPvMfi6xdrp3ZQvH9-H-ShF23GXlApA";
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 
@@ -65,22 +64,23 @@ WQIDAQAB
                 IssuerSigningKey = new RsaSecurityKey(rsa)
             };
 
-            SecurityToken securityToken;
             try {
+                SecurityToken securityToken;
                 ClaimsPrincipal principal = tokenHandler.ValidateToken(token, parameters, out securityToken);
-                Console.WriteLine(securityToken);
 
-                var payload = ((JwtSecurityToken)securityToken).Payload["data"];
-                Console.WriteLine(payload);
+                var payload = principal.Claims.Single(c => c.Type == "data").Value;
 
-                // dynamic json = JValue.Parse(payload.toString());
-                // UserModel userModel  = JsonConvert.DeserializeObject<UserModel>(payload);
-                // Console.WriteLine(userModel);
-            } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+                UserModel user = JsonConvert.DeserializeObject<UserModel>(payload);
+
+                return user;
+            } catch(SecurityTokenExpiredException ex) {
+                // exception Message is returned on response only for debugging purposes
+                return StatusCode(401, ex.Message);
+            } catch(Exception ex) {
+                // exception Message is returned on response only for debugging purposes
+                Console.WriteLine(ex.GetType());
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
-            return new UserModel { username = "Pippo", fullName = "Pippo Pluto" };
         }
     }
 }

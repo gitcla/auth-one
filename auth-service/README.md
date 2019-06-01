@@ -26,6 +26,7 @@ npm run serve to start the server (under the hood it runs ./dist/main.js using n
 # WhoAmi: TODO
 
 - Decode the token and return the data
+  https://gist.github.com/ptsurbeleu/4aa7851e2d8eaffec488
 - Return error codes for invalid or expired token
 - Check with another RSA KEY (should not validate)
 - Write Dockerfile and push the docker image on DockerHub

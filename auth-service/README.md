@@ -25,11 +25,9 @@ npm run serve to start the server (under the hood it runs ./dist/main.js using n
 
 # WhoAmi: TODO
 
-- Decode the token and return the data
-  https://gist.github.com/ptsurbeleu/4aa7851e2d8eaffec488
-- Return error codes for invalid or expired token
-- Check with another RSA KEY (should not validate)
-- Write Dockerfile and push the docker image on DockerHub
-- Pull source and generate the build
+- Rename namespace whoami_service removing the underscore
+- Return better error codes for invalid or expired token
 - Implement Authentication with ASP.NET, see:
    https://jasonwatmore.com/post/2018/08/14/aspnet-core-21-jwt-authentication-tutorial-with-example-api
+- Write Dockerfile and push the docker image on DockerHub
+- Pull source and generate the build

@@ -10,7 +10,7 @@ npm run tsc:watch to auto-compile the source .ts files in .src directory.
 
 npm run serve to start the server (under the hood it runs ./dist/main.js using nodemon, which restarts the server each time the compiled files change).
 
-# TODO
+# Auth-Service: TODO
 
 - Use a Mongo Database to store users data and issued tokens
 - Users and Tokens must be moved on a Repository class
@@ -22,3 +22,14 @@ npm run serve to start the server (under the hood it runs ./dist/main.js using n
 - Move user-info on a separate service
 - Rename renew -> refresh
 - Generate production quality build
+
+# WhoAmi: TODO
+
+- Decode the token and return the data
+  https://gist.github.com/ptsurbeleu/4aa7851e2d8eaffec488
+- Return error codes for invalid or expired token
+- Check with another RSA KEY (should not validate)
+- Write Dockerfile and push the docker image on DockerHub
+- Pull source and generate the build
+- Implement Authentication with ASP.NET, see:
+   https://jasonwatmore.com/post/2018/08/14/aspnet-core-21-jwt-authentication-tutorial-with-example-api

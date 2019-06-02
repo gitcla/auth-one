@@ -48,25 +48,24 @@ WQIDAQAB
         }
 
         public UserModel validate(string token) {
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            try {
+                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 
-            SecurityToken securityToken;
-            ClaimsPrincipal principal = tokenHandler.ValidateToken(token, this._tokenValidationParameters, out securityToken);
+                SecurityToken securityToken;
+                ClaimsPrincipal principal = tokenHandler.ValidateToken(token, this._tokenValidationParameters, out securityToken);
 
-            var payload = principal.Claims.Single(c => c.Type == "data").Value;
+                var payload = principal.Claims.Single(c => c.Type == "data").Value;
 
-            return JsonConvert.DeserializeObject<UserModel>(payload);
-
-            // try {
-            // } catch(SecurityTokenExpiredException ex) {
-            //     // exception Message is returned on response only for debugging purposes
-            //     Console.WriteLine(ex.Message);
-            //     // return StatusCode(401, ex.Message);
-            // } catch(Exception ex) {
-            //     // exception Message is returned on response only for debugging purposes
-            //     Console.WriteLine(ex.Message);
-            //     // return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            // }
+                return JsonConvert.DeserializeObject<UserModel>(payload);
+            } catch(SecurityTokenExpiredException ex) {
+                Console.WriteLine(ex.Message);
+                throw new UnauthorizedException("Token expired");
+                // return StatusCode(401, ex.Message);
+            } catch(Exception ex) {
+                Console.WriteLine(ex.Message);
+                throw new UnauthorizedException("Authentication failed");
+                // return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

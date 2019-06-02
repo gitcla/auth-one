@@ -47,7 +47,7 @@ namespace WhoamiService
             .AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
+                x.SaveToken = false;
                 x.TokenValidationParameters = authOneService.getTokenValidationParameters();
             });
         }

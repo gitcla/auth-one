@@ -32,8 +32,9 @@ namespace WhoamiService.AuthOne {
             {
                 RequireExpirationTime = true,
                 RequireSignedTokens = true,
-                ValidateIssuer = false,
                 ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new RsaSecurityKey(rsa)
             };
         }

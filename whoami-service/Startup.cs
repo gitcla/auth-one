@@ -26,6 +26,9 @@ namespace WhoamiService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            var publicKey = appSettingsSection.GetSection("PublicKey").Value;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

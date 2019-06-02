@@ -14,9 +14,9 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto.Parameters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using whoami_service.Models;
+using WhoamiService.Models;
 
-namespace whoami_service.Controllers
+namespace WhoamiService.Controllers
 {
     [Route("/")]
     [ApiController]

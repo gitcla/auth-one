@@ -1,4 +1,4 @@
-namespace whoami_service.Models
+namespace WhoamiService.Models
 {
     public class UserModel {
         public string username { get; set; }

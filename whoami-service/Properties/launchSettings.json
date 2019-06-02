@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "whoami_service": {
+    "WhoamiService": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",

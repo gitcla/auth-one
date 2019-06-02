@@ -1,0 +1,25 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: ng-client-dep
+  labels:
+    component: ng-client
+    app: auth-one
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: ng-client
+  template:
+    metadata:
+      labels:
+        component: ng-client
+    spec:
+      containers:
+      - name: ng-client-container
+        image: nginx:1.15.2
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 80
+            protocol: TCP
+      restartPolicy: Always

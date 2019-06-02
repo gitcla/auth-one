@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Mongo
+kubectl create configmap mongo-config --from-file=mongo/configs/mongodb.conf
 kubectl create -f mongo/service.yaml
 kubectl create -f mongo/deployment.yaml
 
@@ -8,6 +9,7 @@ kubectl create -f mongo/deployment.yaml
 kubectl create -f whoami-service/k8s-service.yaml
 kubectl create -f whoami-service/k8s-deployment.yaml
 
-# Frontend
-#kubectl create -f frontend/service.yaml
-#kubectl create -f frontend/deployment.yaml
+# reverse-proxy
+kubectl create configmap reverse-proxy-config --from-file=reverse-proxy/nginx.conf
+kubectl create -f reverse-proxy/k8s-service.yaml
+kubectl create -f reverse-proxy/k8s-deployment.yaml

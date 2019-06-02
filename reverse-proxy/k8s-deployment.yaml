@@ -1,0 +1,33 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: reverse-proxy-dep
+  labels:
+    component: reverse-proxy
+    app: auth-one
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: reverse-proxy
+  template:
+    metadata:
+      labels:
+        component: reverse-proxy
+    spec:
+      volumes:
+      - name: reverse-proxy-config-volume
+        configMap:
+          name: reverse-proxy-config
+      containers:
+      - name: reverse-proxy-container
+        image: nginx:1.15.2
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 80
+            protocol: TCP
+        volumeMounts:
+            - mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              name: reverse-proxy-config-volume
+      restartPolicy: Always

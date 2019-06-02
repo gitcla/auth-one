@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: reverse-proxy-svc
+  labels:
+    app: auth-one
+    component: reverse-proxy
+spec:
+  # NodePort should be used only for local development, on the cloud use a Load Balanced IP
+  type: NodePort
+  ports:
+  - nodePort: 32000
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    component: reverse-proxy

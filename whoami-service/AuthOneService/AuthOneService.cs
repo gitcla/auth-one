@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto.Parameters;
 using Newtonsoft.Json;
@@ -14,15 +14,7 @@ using WhoamiService.Models;
 
 namespace WhoamiService.AuthOne {
     public class AuthOneService {
-        private const string PublicKey = @"
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7H3kztq99wQY2ClKjFQU
-mB/Z+S9Gi2KkG+AzoqSEZID+ldCdp/qKyI9z70K1zfa8gN5I7GgSZSKlhj8HLhmM
-UceKwjzM5y8tjJgEuWTLv91a6IVLry1kuhy10mGJteLMqF80z9lx3+SlMipKe5ac
-LJ3mH6og6PK/UIl1viHcjHBIuwDepcRvKOUPcmlvaDBLaCaGZMNY+FZ9k1chel8h
-jVY1z3EP8n57+gdz9yJ3u0BQ0oQcaJNsCvYUbDK17hl1O59ZV25DdKHPuFo89A4j
-scc52/MLs2d5GNfTEllv7cRpy6EBtd1JR8WuVwiSfAsvs61MJ6i/jhnb6QuFJ8MX
-WQIDAQAB
-";
+        private const string PublicKey = @"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7H3kztq99wQY2ClKjFQUmB/Z+S9Gi2KkG+AzoqSEZID+ldCdp/qKyI9z70K1zfa8gN5I7GgSZSKlhj8HLhmMUceKwjzM5y8tjJgEuWTLv91a6IVLry1kuhy10mGJteLMqF80z9lx3+SlMipKe5acLJ3mH6og6PK/UIl1viHcjHBIuwDepcRvKOUPcmlvaDBLaCaGZMNY+FZ9k1chel8hjVY1z3EP8n57+gdz9yJ3u0BQ0oQcaJNsCvYUbDK17hl1O59ZV25DdKHPuFo89A4jscc52/MLs2d5GNfTEllv7cRpy6EBtd1JR8WuVwiSfAsvs61MJ6i/jhnb6QuFJ8MXWQIDAQAB";
 
         private readonly TokenValidationParameters _tokenValidationParameters;
 
@@ -58,11 +50,15 @@ WQIDAQAB
 
                 return JsonConvert.DeserializeObject<UserModel>(payload);
             } catch(SecurityTokenExpiredException ex) {
+                // TODO: use logger
                 Console.WriteLine(ex.Message);
+
                 throw new UnauthorizedException("Token expired");
                 // return StatusCode(401, ex.Message);
             } catch(Exception ex) {
+                // TODO: use logger
                 Console.WriteLine(ex.Message);
+
                 throw new UnauthorizedException("Authentication failed");
                 // return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }

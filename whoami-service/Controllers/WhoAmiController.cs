@@ -23,12 +23,13 @@ namespace WhoamiService.Controllers
             IdentityModelEventSource.ShowPII = true;
 
             // Should arrive on header request
-            string token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJuYW1lIjoibWFyaW9AbHVpZ2kub3JnIiwiZnVsbE5hbWUiOiJNYXJpbyBSb3NzaSJ9LCJpYXQiOjE1NTk0Njc3MjgsImV4cCI6MTU1OTQ2ODAyOH0.ywBgfT6NvfJ09GgUg1gjQw8tyQH8SgzC68Rw5VxdneBwVW6zdk8mNqA4XQOqwkbYrZ0iKKPNj7ADZ99MC4q6WcEc9Hj5HhvFgM01Z1MY3q2Aejy8-_3dpmc-UuTmh7orsB1YeJwe4hLVzFvKUqEbNb2oxfFcUnWRrLnqyU1uzVURE6KUzddT8OHm7wkD7LiJb4yybsIVeAqPCtPd3bvwf5hC9MecC0PX8uctyEmyJF_KpeB7UJx0VnEJrbN4k2m_fLglVY9DUa2xhWEWyUv9s1xq28xO0x466IEZ3qyH9V1qO4cOvBPcUsFnwm9FbIwI3ORgbCVlv4jDtOei6r_Hbg";
+            string token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJuYW1lIjoibWFyaW9AbHVpZ2kub3JnIiwiZnVsbE5hbWUiOiJNYXJpbyBSb3NzaSJ9LCJpYXQiOjE1NTk0Njg5MzIsImV4cCI6MTU1OTQ2OTIzMn0.LsLUDe9OV2glyZRDtp8sDRLCRwsz8eexfdk50dv_QXm9rY7Z_7_YF76ZH57PUMqusNk9oJi-NLuK7ZnhsmplRSJtGx8ywgr1auY_4TFY998Lcz0vBaUVDAUfUhAQxeWxrilcRSLq5JlTB2S-m7VlzTMMoMFI3SWgPGDLh9c8YDL2Caf03_m9Fys_ED6-tLIoYYje3FBoFWAZGD-r2FyAnP6ZKzQ35FvKsuccxrRsb0HIkTYVNYgNyNZHz1u-kcAn7xjZq6ErUvQjnm-6KtD96DolRlBV7AT-mQEXRfvQanCspANL06R9_QQUnPGt18dXi13F_PxIQTudGcbPN0mnVQ";
 
             var authService = new AuthOneService();
             var user = authService.validate(token);
 
-            Console.WriteLine(user);
+            // TODO: use logger
+            Console.WriteLine("User validated: " + user.username);
 
             return user;
         }

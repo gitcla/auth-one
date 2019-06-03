@@ -1,79 +1,91 @@
 'use strict';
 
+import CONFIG from './config';
+import DATA from './users-data';
+
 import express = require('express');
 import bodyParser = require('body-parser');
 import jwt = require('jsonwebtoken');
+import mongoDb = require('mongodb');
 
-import CONFIG from './config';
-import DATA from './users-data';
 import { AuthService } from './auth-service';
 
-const app = express();
+const mongoUrl = process.env.MONGO_URL ? process.env.MONGO_URL : 'mongodb://localhost:27017/authone';
+const mongoClient = new mongoDb.MongoClient(mongoUrl, { useNewUrlParser: true });
 
-app.use(bodyParser.json());
-app.set('json spaces', 2);
+mongoClient.connect(err => {
+    if (err) { throw err; }
 
-const authService = new AuthService(DATA.users);
+    console.log('Connected successfully to Mongo server');
 
-app.post('/auth/login', (req, res) => {
-    const token = authService.login(req.body.username, req.body.password);
+    const db = mongoClient.db();
+    const app = express();
 
-    res.setHeader('Content-Type', 'text/plain');
+    app.use(bodyParser.json());
+    app.set('json spaces', 2);
 
-    if (token === null) {
-        res.status(403).end('Could not authenticate\n');
-    } else {
-        res.status(200).send(token);
-    }
-});
+    const authService = new AuthService(DATA.users, db);
 
-app.post('/auth/token/validate', (req, res) => {
-    const response = authService.validate(req.body.token);
+    app.post('/login', (req, res) => {
+        authService.login(req.body.username, req.body.password).then(token => {
+            res.setHeader('Content-Type', 'text/plain');
 
-    res.setHeader('Content-Type', 'application/json');
+            if (token === null) {
+                res.status(403).end('Could not authenticate\n');
+            } else {
+                res.status(200).send(token);
+            }
+        });
+    });
 
-    if (response) {
-        res.status(200).json(response);
-    } else {
-        res.status(403).send(response);
-    }
-});
+    app.post('/token/validate', (req, res) => {
+        const response = authService.validate(req.body.token);
 
-app.post('/auth/token/renew', (req, res) => {
-    const renewedToken = authService.renew(req.body.token);
+        res.setHeader('Content-Type', 'application/json');
 
-    res.setHeader('Content-Type', 'text/plain');
-
-    if (renewedToken !== null) {
-        res.status(200).send(renewedToken);
-    } else {
-        res.status(403).send('Could not renew token');
-    }
-});
-
-// TODO: it should be moved on a separate service
-app.get('/user/info', (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-
-    try {
-        const authToken: any = req.headers['auth-token'];
-        if (authToken === undefined) { throw new Error('No Auth Token provided'); }
-        const userInfo = authService.getUserInfos(authToken);
-
-        res.status(200).json(userInfo);
-    } catch (err) {
-        if (err.name === jwt.TokenExpiredError.name) {
-            res.status(399).json('Token expired');
+        if (response) {
+            res.status(200).json(response);
         } else {
-            res.status(599).json('Could not provide user infos');
+            res.status(403).send(response);
         }
-    }
-});
+    });
 
-app.use((req, res) => {
-    res.sendStatus(404);
-});
+    app.post('/token/renew', (req, res) => {
+        const renewedToken = authService.renew(req.body.token);
 
-app.listen(CONFIG.PORT, () => {
-    console.log(`server listening on http://${CONFIG.HOST}:${CONFIG.PORT}/`);
+        res.setHeader('Content-Type', 'text/plain');
+
+        if (renewedToken !== null) {
+            res.status(200).send(renewedToken);
+        } else {
+            res.status(403).send('Could not renew token');
+        }
+    });
+
+    // TODO: it should be moved on a separate service
+    // app.get('/user/info', (req, res) => {
+    //     res.setHeader('Content-Type', 'application/json');
+
+    //     try {
+    //         const authToken: any = req.headers['auth-token'];
+    //         if (authToken === undefined) { throw new Error('No Auth Token provided'); }
+    //         const userInfo = authService.getUserInfos(authToken);
+
+    //         res.status(200).json(userInfo);
+    //     } catch (err) {
+    //         if (err.name === jwt.TokenExpiredError.name) {
+    //             res.status(399).json('Token expired');
+    //         } else {
+    //             res.status(599).json('Could not provide user infos');
+    //         }
+    //     }
+    // });
+
+    app.use((req, res) => {
+        res.sendStatus(404);
+    });
+
+    app.listen(CONFIG.PORT, () => {
+        console.log(`server listening on http://${CONFIG.HOST}:${CONFIG.PORT}/`);
+    });
 });

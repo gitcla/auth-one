@@ -4,6 +4,7 @@ import PRIVATE_KEY from './private-key';
 import PUBLIC_KEY from './public-key';
 import jwt = require('jsonwebtoken');
 import crypto = require('crypto');
+import mongoDb = require('mongodb');
 
 export class AuthService {
 
@@ -11,26 +12,34 @@ export class AuthService {
 
     private readonly _expirationTime: string = '5m';
     private readonly _users: User[];
+    private readonly _db: mongoDb.Db;
 
-    constructor(users: any) {
+    constructor(users: any, db: mongoDb.Db) {
         this._expirationTime = process.env.EXPIRATION_TIME ? process.env.EXPIRATION_TIME : AuthService.DEFAULT_EXPIRATION_TIME;
-        console.log("Token expiration time set to " + this._expirationTime);
+        console.log('Token expiration time set to ' + this._expirationTime);
         this._users = users;
+        this._db = db;
     }
 
-    login(username: string, password: string): string | null {
+    async login(username: string, password: string): Promise<string | null> {
         console.log('Login...');
 
         try {
             const encodedPassword = this.hashPassword(password);
 
-            // TODO: use an indexed repository
-            const user = this._users.find(u => u.username === username && u.password === encodedPassword);
+            // Find the user on Mongo collection
+            // username should be case insensitive?
+            const user = await this._db.collection('users').findOne({
+                username: username, 
+                password: encodedPassword
+            });
 
-            if (user === undefined) { throw new Error('Could not authenticate'); }
+            if (user === null) { throw new Error('Could not authenticate'); }
 
             const token = this.generateToken(user);
-            user.issuedTokens.unshift(token); // TODO: use a buffer of no more than XX elements
+
+            // TODO: save the token on a Mongo collection
+            // user.issuedTokens.unshift(token); // TODO: use a buffer of no more than XX elements
 
             console.log('Token generated');
 
@@ -57,10 +66,14 @@ export class AuthService {
         }
     }
 
+    /**
+     * Renew a previously issued token.
+     */
     renew(token: string): string {
         console.log('Renew...');
 
         try {
+            // TODO: use jwt.decode instead of verify
             const decodedToken: any = jwt.verify(token, PUBLIC_KEY, { ignoreExpiration: true });
             const user = this._users.find(u => u.username === decodedToken.data.username);
 
@@ -83,7 +96,6 @@ export class AuthService {
         }
     }
 
-    // TODO: should be moved on a separate service
     getUserInfos(token: string): PayloadData {
         const decodedToken: any = jwt.verify(token, PUBLIC_KEY);
         return decodedToken.data;

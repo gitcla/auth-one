@@ -7,11 +7,14 @@ import crypto = require('crypto');
 
 export class AuthService {
 
-    private readonly EXPIRATION_TIME = '5m';
+    private static readonly DEFAULT_EXPIRATION_TIME: string = '5m';
 
+    private readonly _expirationTime: string = '5m';
     private readonly _users: User[];
 
     constructor(users: any) {
+        this._expirationTime = process.env.EXPIRATION_TIME ? process.env.EXPIRATION_TIME : AuthService.DEFAULT_EXPIRATION_TIME;
+        console.log("Token expiration time set to " + this._expirationTime);
         this._users = users;
     }
 
@@ -94,7 +97,7 @@ export class AuthService {
         return jwt.sign(
             { data: payloadData },
             PRIVATE_KEY,
-            { algorithm: 'RS256', expiresIn: this.EXPIRATION_TIME }
+            { algorithm: 'RS256', expiresIn: this._expirationTime }
         );
     }
 

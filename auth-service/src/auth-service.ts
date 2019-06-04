@@ -6,106 +6,123 @@ import jwt = require('jsonwebtoken');
 import crypto = require('crypto');
 import mongoDb = require('mongodb');
 
+// TODO: add User-Agent field
+export interface TokenDocument {
+    username: string;
+    token: string;
+    issuedAt: Date;
+    remoteAddress: string;
+}
+
 export class AuthService {
 
     private static readonly DEFAULT_EXPIRATION_TIME: string = '5m';
 
     private readonly _expirationTime: string = '5m';
-    private readonly _users: User[];
     private readonly _db: mongoDb.Db;
 
-    constructor(users: any, db: mongoDb.Db) {
+    constructor(db: mongoDb.Db) {
         this._expirationTime = process.env.EXPIRATION_TIME ? process.env.EXPIRATION_TIME : AuthService.DEFAULT_EXPIRATION_TIME;
         console.log('Token expiration time set to ' + this._expirationTime);
-        this._users = users;
         this._db = db;
     }
 
-    async login(username: string, password: string): Promise<string | null> {
+    async login(username: string, password: string, remoteAddress: string): Promise<string> {
+        if (username === null || username === undefined) { throw new Error('Invalid username'); }
+        if (password === null || password === undefined) { throw new Error('Invalid password'); }
+
         console.log('Login...');
 
-        try {
-            const encodedPassword = this.hashPassword(password);
+        username = username.toLowerCase(); // username is treated lower case on database
+        const encodedPassword = this.hashPassword(password);
 
-            // Find the user on Mongo collection
-            // username should be case insensitive?
-            const user = await this._db.collection('users').findOne({
-                username: username, 
-                password: encodedPassword
-            });
+        // Find the user on Mongo collection
+        const user = await this._db.collection('users').findOne({
+            username: username,
+            password: encodedPassword
+        });
 
-            if (user === null) { throw new Error('Could not authenticate'); }
+        if (user === null) { throw new Error('User not found'); }
 
-            const token = this.generateToken(user);
+        const token = this.generateToken(user);
+        const tokenDocument: TokenDocument = {
+            username: username.toLowerCase(),
+            token: token,
+            issuedAt: new Date(),
+            remoteAddress: remoteAddress
+        };
 
-            // TODO: save the token on a Mongo collection
-            // user.issuedTokens.unshift(token); // TODO: use a buffer of no more than XX elements
+        this._db.collection('tokens').insertOne(tokenDocument);
 
-            console.log('Token generated');
+        console.log('Token generated');
 
-            return token;
-        } catch (err) {
-            console.log(err.message);
-            return null;
-        }
-    }
-
-    validate(token: string): boolean {
-        console.log('Validate...');
-
-        try {
-            const decodedToken = jwt.verify(token, PUBLIC_KEY);
-            console.log('Token is valid');
-            console.log(decodedToken);
-
-            return true;
-        } catch (err) {
-            console.log(err.message);
-
-            return false;
-        }
+        return token;
     }
 
     /**
-     * Renew a previously issued token.
+     * Refresh a previously issued token.
      */
-    renew(token: string): string {
-        console.log('Renew...');
+    async refresh(token: string, remoteAddress: string): Promise<string> {
+        console.log('Refresh token...');
 
-        try {
-            // TODO: use jwt.decode instead of verify
-            const decodedToken: any = jwt.verify(token, PUBLIC_KEY, { ignoreExpiration: true });
-            const user = this._users.find(u => u.username === decodedToken.data.username);
+        const decodedToken: any = jwt.verify(token, PUBLIC_KEY, { ignoreExpiration: true });
+        const username = decodedToken.data.username;
 
-            if (user === undefined) { throw new Error('User not found'); }
+        // Find the updated data of the user on Mongo collection
+        const user = await this._db.collection('users').findOne({
+            username: username
+        });
 
-            // TODO: must be improved, using indexes is not safe!
-            const indexOfToken = user.issuedTokens.indexOf(token);
-            if (indexOfToken === -1) { throw new Error('Issued token not found'); }
+        if (user === null) { throw new Error('User not found'); }
 
-            const renewedToken = this.generateToken(user);
-            user.issuedTokens[indexOfToken] = renewedToken;
+        const refreshedToken = this.generateToken(user);
+        const refreshedTokenDocument = {
+            username: username,
+            token: refreshedToken,
+            issuedAt: new Date(),
+            remoteAddress: remoteAddress
+        };
 
-            console.log('Token renewed');
+        // findOneAndReplace the old token on MongoDB
+        const oldDocument = await this._db.collection('tokens').findOneAndReplace({
+            username: username,
+            token: token
+        }, refreshedTokenDocument);
 
-            return renewedToken;
-        } catch (err) {
-            console.log(err.message);
+        if (oldDocument.value === null) { throw new Error('Could not refresh token'); }
 
-            return null;
-        }
+        console.log('Token refreshed.');
+
+        return refreshedToken;
     }
 
-    getUserInfos(token: string): PayloadData {
-        const decodedToken: any = jwt.verify(token, PUBLIC_KEY);
-        return decodedToken.data;
-    }
+    // validate(token: string): boolean {
+    //     console.log('Validate...');
+
+    //     try {
+    //         const decodedToken = jwt.verify(token, PUBLIC_KEY);
+    //         console.log('Token is valid');
+    //         console.log(decodedToken);
+
+    //         return true;
+    //     } catch (err) {
+    //         console.log(err.message);
+
+    //         return false;
+    //     }
+    // }
+
+    // getUserInfos(token: string): PayloadData {
+    //     const decodedToken: any = jwt.verify(token, PUBLIC_KEY);
+    //     return decodedToken.data;
+    // }
 
     private generateToken(user: User): string {
         const payloadData: PayloadData = {
             username: user.username,
             fullName: user.fullName
         };
+
         return jwt.sign(
             { data: payloadData },
             PRIVATE_KEY,

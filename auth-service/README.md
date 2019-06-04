@@ -22,11 +22,19 @@ The following env variables with relative defaults are supported:
 ### TODO
 
 - Use a Mongo Database to store users data and issued tokens
-- Configure express for a production environment
 - Implement invalidate for logout purposes
 - Implement invalidate-all for security purposes
+- Rename renew -> refresh
 - Define correct error status codes
 - Move user-info on a separate service
-- Rename renew -> refresh
-- Generate production quality build
+- Generate production quality Dockerfile with:
+  NODE_ENV=production
+  npm install --production
+- Implement endpoints liveness and readiness for k8s health checks
 - Prepare a script to load some users on a Mongo collection
+- Configure indexes on collections
+- Configure express for a production environment
+- Review test scripts
+- Configure rate limiter on login endpoint with:
+  https://github.com/animir/node-rate-limiter-flexible  
+  Check that the endpoint receives the caller IP (eventually from an header injected with nginx)

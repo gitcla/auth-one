@@ -15,23 +15,19 @@ npm run serve to start the server (under the hood it runs ./dist/main.js using n
 The following env variables with relative defaults are supported:
 
 ```
-  EXPIRATION_TIME=5m
+  TOKEN_EXPIRATION_TIME=5m
   MONGO_URL=mongodb://localhost:27017/authone
 ```
 
 ### TODO
 
-- Use a Mongo Database to store users data and issued tokens
 - Implement invalidate for logout purposes
 - Implement invalidate-all for security purposes
-- Rename renew -> refresh
-- Define correct error status codes
-- Move user-info on a separate service
 - Generate production quality Dockerfile with:
   NODE_ENV=production
   npm install --production
-- Implement endpoints liveness and readiness for k8s health checks
 - Prepare a script to load some users on a Mongo collection
+- Implement endpoints liveness and readiness for k8s health checks
 - Configure indexes on collections
 - Configure express for a production environment
 - Review test scripts

@@ -1,37 +1,35 @@
 import { User } from './user';
 import { PayloadData } from './payload-data';
+import { TokenDocument } from './token-document';
 import PRIVATE_KEY from './private-key';
 import PUBLIC_KEY from './public-key';
 import jwt = require('jsonwebtoken');
 import crypto = require('crypto');
 import mongoDb = require('mongodb');
 
-// TODO: add User-Agent field
-export interface TokenDocument {
-    username: string;
-    token: string;
-    issuedAt: Date;
-    remoteAddress: string;
-}
-
 export class AuthService {
 
-    private static readonly DEFAULT_EXPIRATION_TIME: string = '5m';
-
-    private readonly _expirationTime: string = '5m';
+    private readonly _tokenExpirationTime: string = '5m';
     private readonly _db: mongoDb.Db;
 
-    constructor(db: mongoDb.Db) {
-        this._expirationTime = process.env.EXPIRATION_TIME ? process.env.EXPIRATION_TIME : AuthService.DEFAULT_EXPIRATION_TIME;
-        console.log('Token expiration time set to ' + this._expirationTime);
+    constructor(db: mongoDb.Db, tokenExpirationTime: string) {
+        this._tokenExpirationTime = tokenExpirationTime;
+        console.log('Token expiration time set to ' + this._tokenExpirationTime);
         this._db = db;
     }
 
+    /**
+     * Tries to authenticate and returns a new token on success.
+     * 
+     * @param username username provided on body request
+     * @param password password provided on body request
+     * @param remoteAddress IP Address of the client
+     */
     async login(username: string, password: string, remoteAddress: string): Promise<string> {
+        console.log('Login...');
+
         if (username === null || username === undefined) { throw new Error('Invalid username'); }
         if (password === null || password === undefined) { throw new Error('Invalid password'); }
-
-        console.log('Login...');
 
         username = username.toLowerCase(); // username is treated lower case on database
         const encodedPassword = this.hashPassword(password);
@@ -42,7 +40,7 @@ export class AuthService {
             password: encodedPassword
         });
 
-        if (user === null) { throw new Error('User not found'); }
+        if (user === null) { throw new Error(`User "${username}" not found`); }
 
         const token = this.generateToken(user);
         const tokenDocument: TokenDocument = {
@@ -54,26 +52,31 @@ export class AuthService {
 
         this._db.collection('tokens').insertOne(tokenDocument);
 
-        console.log('Token generated');
+        console.log('Token generated for user ' + username);
 
         return token;
     }
 
     /**
-     * Refresh a previously issued token.
+     * Refresh a previously issued token and return a new one.
+     * 
+     * @param authHeader Authentication header with the Bearer token.
+     * @param remoteAddress IP Address of the client
      */
-    async refresh(token: string, remoteAddress: string): Promise<string> {
+    async refresh(authHeader: string, remoteAddress: string): Promise<string> {
         console.log('Refresh token...');
+
+        const token = this.getAuthToken(authHeader);
 
         const decodedToken: any = jwt.verify(token, PUBLIC_KEY, { ignoreExpiration: true });
         const username = decodedToken.data.username;
 
-        // Find the updated data of the user on Mongo collection
+        // Get the updated data of the user on Mongo collection
         const user = await this._db.collection('users').findOne({
             username: username
         });
 
-        if (user === null) { throw new Error('User not found'); }
+        if (user === null) { throw new Error(`User "${username}" not found`); }
 
         const refreshedToken = this.generateToken(user);
         const refreshedTokenDocument = {
@@ -83,39 +86,48 @@ export class AuthService {
             remoteAddress: remoteAddress
         };
 
-        // findOneAndReplace the old token on MongoDB
-        const oldDocument = await this._db.collection('tokens').findOneAndReplace({
+        // replace the old token informations on MongoDB
+        const replaceResult = await this._db.collection('tokens').findOneAndReplace({
             username: username,
             token: token
         }, refreshedTokenDocument);
 
-        if (oldDocument.value === null) { throw new Error('Could not refresh token'); }
+        if (replaceResult.value === null) { throw new Error('Old token not found, could not refresh'); }
 
-        console.log('Token refreshed.');
+        console.log('Token refreshed for user ' + username);
 
         return refreshedToken;
     }
 
-    // validate(token: string): boolean {
-    //     console.log('Validate...');
+    /**
+     * Revoke a previously issued token.
+     * 
+     * @param authHeader Authentication header with the Bearer token.
+     */
+    async revoke(authHeader: string): Promise<void> {
+        console.log('Revoke token...');
 
-    //     try {
-    //         const decodedToken = jwt.verify(token, PUBLIC_KEY);
-    //         console.log('Token is valid');
-    //         console.log(decodedToken);
+        const token = this.getAuthToken(authHeader);
 
-    //         return true;
-    //     } catch (err) {
-    //         console.log(err.message);
+        const decodedToken: any = jwt.verify(token, PUBLIC_KEY, { ignoreExpiration: true });
+        const username = decodedToken.data.username;
 
-    //         return false;
-    //     }
-    // }
+        const result = await this._db.collection('tokens').deleteOne({
+            username: username,
+            token: token
+        });
 
-    // getUserInfos(token: string): PayloadData {
-    //     const decodedToken: any = jwt.verify(token, PUBLIC_KEY);
-    //     return decodedToken.data;
-    // }
+        if (result.deletedCount === 0) { throw new Error('Token not found'); }
+
+        console.log('Token revoked for user ' + username)
+    }
+
+    private getAuthToken(authHeader: string): string {
+        if (authHeader === undefined || authHeader === null) { throw new Error('No Authorization header provided'); }
+        if (authHeader.startsWith('Bearer ') === false) { throw new Error('Invalid Authorization header'); }
+
+        return authHeader.substring(7);
+    };
 
     private generateToken(user: User): string {
         const payloadData: PayloadData = {
@@ -126,7 +138,7 @@ export class AuthService {
         return jwt.sign(
             { data: payloadData },
             PRIVATE_KEY,
-            { algorithm: 'RS256', expiresIn: this._expirationTime }
+            { algorithm: 'RS256', expiresIn: this._tokenExpirationTime }
         );
     }
 
@@ -135,4 +147,9 @@ export class AuthService {
         hash.update(plainPassword);
         return hash.digest('base64');
     }
+
+    // getUserInfos(token: string): PayloadData {
+    //     const decodedToken: any = jwt.verify(token, PUBLIC_KEY);
+    //     return decodedToken.data;
+    // }
 }

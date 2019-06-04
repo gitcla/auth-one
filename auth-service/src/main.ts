@@ -1,7 +1,6 @@
 'use strict';
 
 import CONFIG from './config';
-import DATA from './users-data';
 
 import express = require('express');
 import bodyParser = require('body-parser');
@@ -11,25 +10,14 @@ import { AuthService } from './auth-service';
 
 const CONTENT_TYPE = 'Content-Type';
 const TEXT_PLAIN = 'text/plain';
-// const APPLICATION_JSON = 'application/json';
+const X_FORWARDED_FOR = 'x-forwarded-for';
+const AUTHORIZATION_HEADER = 'authorization';
 
 const getRemoteIpAddress = function (req: express.Request) {
-    return req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].toString() : req.connection.remoteAddress;
+    return req.headers[X_FORWARDED_FOR] ? req.headers[X_FORWARDED_FOR].toString() : req.connection.remoteAddress;
 };
 
-const getAuthToken = function (req: express.Request) {
-    const authHeader: string = req.headers['authorization'];
-    if (authHeader === undefined || authHeader === null) {
-        throw new Error('No Authorization header provided');
-    }
-    if (authHeader.startsWith('Bearer ') === false) {
-        throw new Error('Invalid Authorization header');
-    }
-
-    return authHeader.substring(7);
-};
-
-const mongoUrl = process.env.MONGO_URL ? process.env.MONGO_URL : 'mongodb://localhost:27017/authone';
+const mongoUrl = process.env.MONGO_URL ? process.env.MONGO_URL : CONFIG.MONGO_URL;
 const mongoClient = new mongoDb.MongoClient(mongoUrl, { useNewUrlParser: true });
 
 mongoClient.connect(err => {
@@ -43,7 +31,8 @@ mongoClient.connect(err => {
     app.use(bodyParser.json());
     app.set('json spaces', 2);
 
-    const authService = new AuthService(db);
+    const tokenExpirationTime = process.env.EXPIRATION_TIME ? process.env.EXPIRATION_TIME : CONFIG.TOKEN_EXPIRATION_TIME;
+    const authService = new AuthService(db, tokenExpirationTime);
 
     app.post('/login', (req, res) => {
         const remoteAddress = getRemoteIpAddress(req);
@@ -58,31 +47,31 @@ mongoClient.connect(err => {
             });
     });
 
-    app.post('/token/refresh', (req, res) => {
+    app.get('/token/refresh', (req, res) => {
         const remoteAddress = getRemoteIpAddress(req);
-        try {
-            const token = getAuthToken(req);
 
-            authService.refresh(token, remoteAddress)
-                .then(token => {
-                    res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
-                    res.status(200).send(token);
-                }).catch(err => {
-                    console.log(err.message);
-                    res.status(401).end('Refresh failed');
-                })
-        } catch (err) {
-            console.log(err.message);
-            res.status(401).end('Invalid token');
-        }
+        authService.refresh(req.headers[AUTHORIZATION_HEADER], remoteAddress)
+            .then(token => {
+                res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
+                res.status(200).send(token);
+            }).catch(err => {
+                console.log(err.message);
+                res.status(401).end('Refresh failed');
+            })
     });
 
-    app.post('/token/revoke', (req, res) => {
-        // TODO: revoke a token provided by the Header -> Authorization: Bearer token
-        res.status(500).end('To be implemented');
+    app.get('/token/revoke', (req, res) => {
+        authService.revoke(req.headers[AUTHORIZATION_HEADER])
+            .then(token => {
+                res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
+                res.status(200).send(token);
+            }).catch(err => {
+                console.log(err.message);
+                res.status(401).end('Revoke failed');
+            })
     });
 
-    app.post('/token/revoke-all', (req, res) => {
+    app.get('/token/revoke-all', (req, res) => {
         // TODO: revoke all tokens associated with the user provided by the Header -> Authorization: Bearer token
         res.status(500).end('To be implemented');
     });

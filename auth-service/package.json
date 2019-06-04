@@ -2,7 +2,7 @@
     "name": "auth-service",
     "version": "1.0.0",
     "description": "Provides authentication tokens and revokation architecture",
-    "author": "claudiocup@gmail.com",
+    "author": "Claudio Coppari <info@claudiocoppari.com>",
     "license": "MIT",
     "scripts": {
         "tsc:watch": "tsc -w",

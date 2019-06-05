@@ -6,11 +6,12 @@ metadata:
     app: auth-one
     component: reverse-proxy
 spec:
-  # NodePort should be used only for local development, on the cloud use a Load Balanced IP
-  type: NodePort
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  externalIPs:
+    - 192.168.99.107 # Here you should provide the public IP
   ports:
-  - nodePort: 32000
-    port: 80
+  - port: 80
     targetPort: 80
     protocol: TCP
   selector:

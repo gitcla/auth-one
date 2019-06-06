@@ -33,4 +33,6 @@ Password is: 'secure'
 - Write a script to initialize Mongo database and populate users collection with sample data
 - Configure indexes on collections
 - Review nginx.conf for reverse proxy
+- Implement roles-service
+- Implement users-service
 

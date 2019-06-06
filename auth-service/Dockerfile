@@ -10,7 +10,8 @@ COPY package*.json tsconfig.json ./
 
 # If you are building your code for production
 # RUN npm ci --only=production
-RUN npm ci
+RUN npm ci --only=production
+RUN npm install typescript@2.9.2
 
 # Bundle app source
 COPY ./src/ ./src/

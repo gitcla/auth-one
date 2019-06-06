@@ -24,8 +24,6 @@ The following env variables with relative defaults are supported:
 - Generate production quality Dockerfile with:
   NODE_ENV=production
   npm install --production
-- Prepare a script to load some users on a Mongo collection
-- Configure indexes on collections
 - Configure express for a production environment
 - Review test scripts
 - Configure rate limiter on login endpoint with:

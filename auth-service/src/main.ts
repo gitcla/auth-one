@@ -88,8 +88,8 @@ mongoClient.connect(err => {
 
     app.get('/liveness', (_, res) => {
         db.stats()
-            .then(x => {
-                console.log('Status: ' + (x.ok === 1 ? 'Ok' : 'KO'));
+            .then(stats => {
+                console.log('Status: ' + (stats.ok === 1 ? 'Ok' : 'KO'));
                 res.status(200).send('Ok');
             }).catch(err => {
                 console.log(err.message);

@@ -21,8 +21,6 @@ The following env variables with relative defaults are supported:
 
 ### TODO
 
-- Implement invalidate-all for security purposes
-- Implement endpoints liveness and readiness for k8s health checks
 - Generate production quality Dockerfile with:
   NODE_ENV=production
   npm install --production

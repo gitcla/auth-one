@@ -43,7 +43,7 @@ mongoClient.connect(err => {
                 res.status(200).send(token);
             }).catch(err => {
                 console.log(err.message);
-                res.status(401).end('Login failed');
+                res.status(401).end('login failed');
             });
     });
 
@@ -56,24 +56,45 @@ mongoClient.connect(err => {
                 res.status(200).send(token);
             }).catch(err => {
                 console.log(err.message);
-                res.status(401).end('Refresh failed');
-            })
+                res.status(401).end('refresh failed');
+            });
     });
 
     app.get('/token/revoke', (req, res) => {
-        authService.revoke(req.headers[AUTHORIZATION_HEADER])
+        const remoteAddress = getRemoteIpAddress(req);
+
+        authService.revoke(req.headers[AUTHORIZATION_HEADER], remoteAddress)
             .then(token => {
                 res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
                 res.status(200).send(token);
             }).catch(err => {
                 console.log(err.message);
-                res.status(401).end('Revoke failed');
+                res.status(401).end('revoke failed');
             })
     });
 
     app.get('/token/revoke-all', (req, res) => {
-        // TODO: revoke all tokens associated with the user provided by the Header -> Authorization: Bearer token
-        res.status(500).end('To be implemented');
+        const remoteAddress = getRemoteIpAddress(req);
+
+        authService.revokeAll(req.headers[AUTHORIZATION_HEADER], remoteAddress)
+            .then(token => {
+                res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
+                res.status(200).send(token);
+            }).catch(err => {
+                console.log(err.message);
+                res.status(401).end('revoke-all failed');
+            });
+    });
+
+    app.get('/liveness', (_, res) => {
+        db.stats()
+            .then(x => {
+                console.log('Status: ' + (x.ok === 1 ? 'Ok' : 'KO'));
+                res.status(200).send('Ok');
+            }).catch(err => {
+                console.log(err.message);
+                res.status(503).send('Service unavailable');
+            });
     });
 
     app.use((_, res) => {

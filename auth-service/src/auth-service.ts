@@ -14,8 +14,9 @@ export class AuthService {
 
     constructor(db: mongoDb.Db, tokenExpirationTime: string) {
         this._tokenExpirationTime = tokenExpirationTime;
-        console.log('Token expiration time set to ' + this._tokenExpirationTime);
         this._db = db;
+
+        console.log('Token expiration time set to ' + this._tokenExpirationTime);
     }
 
     /**
@@ -26,7 +27,7 @@ export class AuthService {
      * @param remoteAddress IP Address of the client
      */
     async login(username: string, password: string, remoteAddress: string): Promise<string> {
-        console.log('Login...');
+        console.log(`${remoteAddress} - Login`);
 
         if (username === null || username === undefined) { throw new Error('Invalid username'); }
         if (password === null || password === undefined) { throw new Error('Invalid password'); }
@@ -52,7 +53,7 @@ export class AuthService {
 
         this._db.collection('tokens').insertOne(tokenDocument);
 
-        console.log('Token generated for user ' + username);
+        console.log(`${remoteAddress} - Token generated for user ${username}`);
 
         return token;
     }
@@ -64,7 +65,7 @@ export class AuthService {
      * @param remoteAddress IP Address of the client
      */
     async refresh(authHeader: string, remoteAddress: string): Promise<string> {
-        console.log('Refresh token...');
+        console.log(`${remoteAddress} - Refresh`);
 
         const token = this.getAuthToken(authHeader);
 
@@ -94,7 +95,7 @@ export class AuthService {
 
         if (replaceResult.value === null) { throw new Error('Old token not found, could not refresh'); }
 
-        console.log('Token refreshed for user ' + username);
+        console.log(`${remoteAddress} - Token refreshed for user ${username}`);
 
         return refreshedToken;
     }
@@ -104,8 +105,8 @@ export class AuthService {
      * 
      * @param authHeader Authentication header with the Bearer token.
      */
-    async revoke(authHeader: string): Promise<void> {
-        console.log('Revoke token...');
+    async revoke(authHeader: string, remoteAddress: string): Promise<void> {
+        console.log(`${remoteAddress} - Revoke`);
 
         const token = this.getAuthToken(authHeader);
 
@@ -119,7 +120,28 @@ export class AuthService {
 
         if (result.deletedCount === 0) { throw new Error('Token not found'); }
 
-        console.log('Token revoked for user ' + username)
+        console.log(`${remoteAddress} - Token revoked for user ${username}`);
+    }
+
+    /**
+     * Revoke all previously issued tokens for authenticated user.
+     * 
+     * @param authHeader Authentication header with the Bearer token.
+     */
+    async revokeAll(authHeader: string, remoteAddress: string): Promise<void> {
+        console.log(`${remoteAddress} - Revoke All`);
+
+        const token = this.getAuthToken(authHeader);
+
+        // token must not be expired!
+        const decodedToken: any = jwt.verify(token, PUBLIC_KEY);
+        const username = decodedToken.data.username;
+
+        await this._db.collection('tokens').deleteMany({
+            username: username
+        });
+
+        console.log(`${remoteAddress} - Revoked all tokens for user ${username}`);
     }
 
     private getAuthToken(authHeader: string): string {
@@ -147,9 +169,4 @@ export class AuthService {
         hash.update(plainPassword);
         return hash.digest('base64');
     }
-
-    // getUserInfos(token: string): PayloadData {
-    //     const decodedToken: any = jwt.verify(token, PUBLIC_KEY);
-    //     return decodedToken.data;
-    // }
 }

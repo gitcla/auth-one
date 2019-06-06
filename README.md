@@ -1,6 +1,6 @@
 # Auth0 with token renewal
 
-This is a proof of concept implementation of Auth0 in a distributed cluster environment with Docker and Kubernetes.
+This is a proof of concept implementation of OAuth on a distributed microservice architecture deployed with Kubernetes.
 
 # Mongo
 
@@ -13,7 +13,7 @@ kubectl port-forward $MONGO_POD_NAME 27017:27017
 
 Now point Robo 3T to localhost:27017
 
-The collection users should contains documents like this:
+The users collection should contain documents like this:
 
 ```
   {
@@ -28,8 +28,9 @@ Password is: 'secure'
 ## TODO
 
 - Use liveness to check container state
-- Filter calls to liveness and readiness endpoints
-- Write a script to initialize Mongo database and populate users collection
+- Filter calls to liveness and readiness endpoints on reverse-proxy
+- Update apiVersion declarations on yaml files
+- Write a script to initialize Mongo database and populate users collection with sample data
 - Configure indexes on collections
 - Review nginx.conf for reverse proxy
 

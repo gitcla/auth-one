@@ -25,7 +25,7 @@ The following env variables with relative defaults are supported:
   NODE_ENV=production
   npm install --production
 - Configure express for a production environment
-- Review test scripts
+- Endpoint to change the password
 - Configure rate limiter on login endpoint with:
   https://github.com/animir/node-rate-limiter-flexible  
   Check that the endpoint receives the caller IP (eventually from an header injected with nginx)

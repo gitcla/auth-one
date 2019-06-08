@@ -6,4 +6,4 @@
 
 <router-outlet></router-outlet>
 
-<mat-progress-bar mode="indeterminate" color="warn" class="progress-bar" *ngIf="loadingState.isLoading"></mat-progress-bar>
+<mat-progress-bar mode="indeterminate" color="warn" class="progress-bar" *ngIf="isLoading | async"></mat-progress-bar>

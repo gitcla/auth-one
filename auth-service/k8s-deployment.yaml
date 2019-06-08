@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-dep
+  labels:
+    component: auth
+    app: auth-one
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: auth
+  template:
+    metadata:
+      labels:
+        component: auth
+    spec:
+      containers:
+      - name: auth-container
+        image: dockla/auth-one-auth:0.1
+        env:
+        - name: MONGO_URL
+          value: "mongodb://mongo-svc:27017/authone"
+        - name: TOKEN_EXPIRATION_TIME
+          value: "5m"
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 1221
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /liveness
+            port: 1221
+          initialDelaySeconds: 3
+          periodSeconds: 30
+      restartPolicy: Always

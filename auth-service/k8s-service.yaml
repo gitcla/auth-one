@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-svc
+  labels:
+    app: auth-one
+    component: auth
+spec:
+  ports:
+  - port: 1221
+    targetPort: 1221
+    protocol: TCP
+  selector:
+    component: auth
+  type: ClusterIP

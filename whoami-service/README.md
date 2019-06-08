@@ -4,4 +4,4 @@ https://jasonwatmore.com/post/2018/08/14/aspnet-core-21-jwt-authentication-tutor
 
 # TODO
 
-- Rename the image to dockla/auth-one-whoami-service
+- [ ] Add liveness endpoint and relative check on k8s

@@ -1,7 +1,12 @@
 # Auth One: JWT token management on a Kubernetes Cluster
 
 This is a proof of concept implementation of the OAuth protocol on a distributed microservice architecture deployed with Kubernetes.
+
+JWT tokens are signed with an RSA private key so other microservices can verify the authenticity using the public key.  Tokens are configured to expire after a configurable period and can be refresh with a specific call to the API.
+
 It can be used as a proof of concept, not all the configurations are well suited for a production environment.
+
+## Architecture
 
 The system is composed of the following components:
 
@@ -41,9 +46,9 @@ Create a new collection called ```users``` with the following document:
 
 ```json
 {
-    username: 'mario@luigi.org',
-    password: 'apNLRRRON1iRHvop7Wj7LUIPp71WhznNzaklH6lgmx4=',
-    fullName: 'Mario Rossi'
+    "username": "mario@luigi.org",
+    "password": "apNLRRRON1iRHvop7Wj7LUIPp71WhznNzaklH6lgmx4=",
+    "fullName": "Mario Rossi"
 }
 
 ```

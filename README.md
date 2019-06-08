@@ -2,7 +2,7 @@
 
 This is a proof of concept implementation of the OAuth protocol on a distributed microservice architecture deployed with Kubernetes.
 
-JWT tokens are signed with an RSA private key so other microservices can verify the authenticity using the public key.  Tokens are configured to expire after a configurable period and can be refresh with a specific call to the API.
+JWT tokens are signed with an RSA private key so other microservices can verify the authenticity using the public key.  Tokens are configured to expire after a configurable period and can be refreshed with a specific call to the API.
 
 It can be used as a proof of concept, not all the configurations are well suited for a production environment.
 
@@ -55,9 +55,7 @@ Create a new collection called ```users``` with the following document:
 
 The password associated for the user is **```secure```**.
 
-Now you are ready to start all the other services.
-
-For semplicity you can launch the following scripts:
+Now you are ready to start all the other services, for semplicity you can launch the following scripts:
 
 ```bash
 ./k8s-undeploy.sh
@@ -68,8 +66,7 @@ For semplicity you can launch the following scripts:
 
 * [ ] Write a script to initialize Mongo database and populate users collection with sample data
 * [ ] Configure indexes on collections
-* [ ] Use liveness to check container state of whoami service
 * [ ] Filter calls to liveness and readiness endpoints on reverse-proxy
-* [ ] Review nginx.conf for reverse proxy
+* [ ] Review nginx.conf
 * [ ] Implement roles-service
 * [ ] Implement users-service

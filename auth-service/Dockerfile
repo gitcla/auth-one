@@ -19,5 +19,7 @@ COPY ./src/ ./src/
 # Compile Typescript
 RUN npm run tsc:build
 
+# If you want you can remove the src folder and the typescript package
+
 EXPOSE 1221
 CMD [ "npm", "start" ]

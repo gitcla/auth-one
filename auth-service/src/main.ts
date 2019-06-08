@@ -1,6 +1,7 @@
 'use strict';
 
 import CONFIG from './config';
+import VERSION from './version';
 
 import express = require('express');
 import bodyParser = require('body-parser');
@@ -43,6 +44,7 @@ mongoClient.connect(err => {
                 res.status(200).send(token);
             }).catch(err => {
                 console.log(err.message);
+                res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
                 res.status(401).end('login failed');
             });
     });
@@ -56,6 +58,7 @@ mongoClient.connect(err => {
                 res.status(200).send(token);
             }).catch(err => {
                 console.log(err.message);
+                res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
                 res.status(401).end('refresh failed');
             });
     });
@@ -69,6 +72,7 @@ mongoClient.connect(err => {
                 res.status(200).send(token);
             }).catch(err => {
                 console.log(err.message);
+                res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
                 res.status(401).end('revoke failed');
             })
     });
@@ -82,6 +86,7 @@ mongoClient.connect(err => {
                 res.status(200).send(token);
             }).catch(err => {
                 console.log(err.message);
+                res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
                 res.status(401).end('revoke-all failed');
             });
     });
@@ -90,11 +95,18 @@ mongoClient.connect(err => {
         db.stats()
             .then(stats => {
                 console.log('Status: ' + (stats.ok === 1 ? 'Ok' : 'KO'));
+                res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
                 res.status(200).send('Ok');
             }).catch(err => {
                 console.log(err.message);
+                res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
                 res.status(503).send('Service unavailable');
             });
+    });
+
+    app.get('/version', (req, res) => {
+        res.setHeader(CONTENT_TYPE, TEXT_PLAIN);
+        res.status(200).send(VERSION);
     });
 
     app.use((_, res) => {

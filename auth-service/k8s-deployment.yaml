@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: auth-container
-        image: dockla/auth-one-auth:0.1
+        image: dockla/auth-one-auth:0.2.0
         env:
         - name: MONGO_URL
           value: "mongodb://mongo-svc:27017/authone"

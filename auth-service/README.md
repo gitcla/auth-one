@@ -21,8 +21,9 @@ The following env variables with relative defaults are supported:
 
 ### TODO
 
-- Configure express for a production environment
+- Review the use of await an all calls to db
 - Endpoint to change the password
+- Configure express for a production environment
 - Configure rate limiter on login endpoint with:
   https://github.com/animir/node-rate-limiter-flexible  
   Check that the endpoint receives the caller IP (eventually from an header injected with nginx)

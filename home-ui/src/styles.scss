@@ -1,0 +1,18 @@
+///////////////////////////////////////////////////////////////////////////
+// Angular Material
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+///////////////////////////////////////////////////////////////////////////
+// Font Awesome
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+
+///////////////////////////////////////////////////////////////////////////
+// Global styles
+body {
+    background-color: #eee;
+    margin: 0;
+    padding: 0;
+}

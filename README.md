@@ -65,6 +65,7 @@ Now you are ready to start all the other services, for semplicity you can launch
 ### TODO
 
 * [ ] Write a script to initialize Mongo database and populate users collection with sample data
+* [ ] Add version endpoint to auth API
 * [ ] Configure indexes on collections
 * [ ] Filter calls to liveness and readiness endpoints on reverse-proxy
 * [ ] Review nginx.conf

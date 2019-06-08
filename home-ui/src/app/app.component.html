@@ -1,0 +1,9 @@
+<mat-toolbar color="primary" class="main-toolbar">
+    <mat-toolbar-row>
+        Auth One
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<router-outlet></router-outlet>
+
+<mat-progress-bar mode="indeterminate" color="warn" class="progress-bar" *ngIf="loadingState.isLoading"></mat-progress-bar>

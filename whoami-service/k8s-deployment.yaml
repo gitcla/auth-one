@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: whoami-dep
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: whoami-container
-        image: dockla/whoami-service:0.1
+        image: dockla/auth-one-whoami:0.1
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 80

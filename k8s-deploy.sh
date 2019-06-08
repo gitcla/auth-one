@@ -6,8 +6,8 @@ kubectl create -f mongo/k8s-service.yaml
 kubectl create -f mongo/k8s-deployment.yaml
 
 # auth-service
-# kubectl create -f auth-service/k8s-service.yaml
-# kubectl create -f auth-service/k8s-deployment.yaml
+kubectl create -f auth-service/k8s-service.yaml
+kubectl create -f auth-service/k8s-deployment.yaml
 
 # whoami-service
 kubectl create -f whoami-service/k8s-service.yaml

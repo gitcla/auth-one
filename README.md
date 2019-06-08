@@ -1,4 +1,4 @@
-# Auth0 with token renewal
+# Auth One: JWT token management on a Kubernetes Cluster
 
 This is a proof of concept implementation of the OAuth protocol on a distributed microservice architecture deployed with Kubernetes.
 It can be used as a proof of concept, not all the configurations are well suited for a production environment.

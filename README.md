@@ -27,12 +27,10 @@ Password is: 'secure'
 
 ## TODO
 
-- Use liveness to check container state
-- Filter calls to liveness and readiness endpoints on reverse-proxy
-- Update apiVersion declarations on yaml files
 - Write a script to initialize Mongo database and populate users collection with sample data
 - Configure indexes on collections
+- Use liveness to check container state of whoami service
+- Filter calls to liveness and readiness endpoints on reverse-proxy
 - Review nginx.conf for reverse proxy
 - Implement roles-service
 - Implement users-service
-

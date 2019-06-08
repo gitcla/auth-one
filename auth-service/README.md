@@ -21,9 +21,6 @@ The following env variables with relative defaults are supported:
 
 ### TODO
 
-- Generate production quality Dockerfile with:
-  NODE_ENV=production
-  npm install --production
 - Configure express for a production environment
 - Endpoint to change the password
 - Configure rate limiter on login endpoint with:

@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
     apiVersion = '';
     username = '';
     password = '';
+    hidePassword = true;
     isLoading: Observable<boolean>;
 
     constructor(
@@ -40,5 +41,9 @@ export class LoginComponent implements OnInit {
             }, err => {
                 console.log(err);
             });
+    }
+
+    canLogin(): boolean {
+        return this.username !== '' && this.password !== '' && !this.loadingService.isSpinningState();
     }
 }

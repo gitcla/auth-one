@@ -11,7 +11,7 @@
 
 .avatar {
     text-align: center;
-    color: #3c9c8f;
+    color: #355686;
 }
 
 .form-login {
@@ -24,10 +24,18 @@
     width: 100%;
 }
 
+.card-description {
+    width: 70%;
+    margin: 0 auto;
+    margin-top: 32px;
+    color: #444;
+}
+
 .footer {
-    position: absolute;
+    position: fixed;
     right: 0;
     bottom: 0;
     margin: 12px;
+    opacity: 0.5;
     color: #333;
 }

@@ -19,6 +19,14 @@ export class LoadingService {
         return this.spinningSubject.asObservable();
     }
 
+    isLoadingState(): boolean {
+        return this.loadingSubject.getValue();
+    }
+
+    isSpinningState(): boolean {
+        return this.spinningSubject.getValue();
+    }
+
     startLoading(): void {
         if (this.spinningSubject.getValue() === false) {
             this.timerSubcription.unsubscribe();

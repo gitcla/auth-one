@@ -9,9 +9,9 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent {
 
-    isLoading: Observable<boolean>;
+    isSpinning: Observable<boolean>;
 
     constructor(loadingService: LoadingService) {
-        this.isLoading = loadingService.isLoading();
+        this.isSpinning = loadingService.isSpinning();
     }
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { LoadingService } from '../services/loading.service';
-import { finalize } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login',
@@ -24,14 +23,11 @@ export class LoginComponent implements OnInit {
     }
 
     check(): void {
-        this.loadingService.setState(true);
-        this.authService.liveness()
-            .pipe(
-                finalize(() => this.loadingService.setState(false))
-            ).subscribe(result => {
+        this.loadingService.load(this.authService.liveness())
+            .subscribe(result => {
                 this.result = result;
             }, err => {
-                console.error(err);
+                console.log(err);
             });
     }
 }

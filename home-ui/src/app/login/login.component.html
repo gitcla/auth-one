@@ -1,20 +1,27 @@
 <mat-card class="card-login">
-    <mat-card-header>
-        <div mat-card-avatar>
-            <i class="fas fa-user fa-3x"></i>
-        </div>
-        <mat-card-title>Auth One</mat-card-title>
-        <mat-card-subtitle>JWT Tokens on K8s</mat-card-subtitle>
-    </mat-card-header>
     <mat-card-content class="card-login-content">
-        <p>This is the Auth One login form</p>
-        <p>{{ result }}</p>
+        <div class="avatar">
+            <i class="fas fa-user-circle fa-6x"></i>
+        </div>
+
+        <div class="form-login">
+            <mat-form-field>
+                <input matInput placeholder="Username" [(ngModel)]="username">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Password" type="password" [(ngModel)]="password">
+            </mat-form-field>
+        </div>
+
+        <p>
+            Use: mario@luigi.org / secure
+        </p>
     </mat-card-content>
-    <mat-card-actions>
-        <button mat-raised-button color="primary" (click)="check()">Click me!</button>
+    <mat-card-actions style="text-align: center">
+        <button mat-raised-button color="primary" (click)="login()" [disabled]="isLoading | async">LOGIN</button>
     </mat-card-actions>
 </mat-card>
 
 <p class="footer">
-    <small>Version {{ apiVersion }}</small>
+    <small>API version {{ apiVersion }}</small>
 </p>

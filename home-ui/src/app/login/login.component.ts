@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { LoadingService } from '../services/loading.service';
+import { MatSnackBar } from '@angular/material';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-login',
@@ -9,10 +11,17 @@ import { LoadingService } from '../services/loading.service';
 })
 export class LoginComponent implements OnInit {
 
-    result = 'click the button';
     apiVersion = '';
+    username = '';
+    password = '';
+    isLoading: Observable<boolean>;
 
-    constructor(private authService: AuthService, private loadingService: LoadingService) { }
+    constructor(
+        private authService: AuthService,
+        private loadingService: LoadingService,
+        private snackBar: MatSnackBar) {
+        this.isLoading = loadingService.isLoading();
+    }
 
     ngOnInit(): void {
         this.authService.version().subscribe(version => {
@@ -22,10 +31,12 @@ export class LoginComponent implements OnInit {
         });
     }
 
-    check(): void {
+    login(): void {
         this.loadingService.load(this.authService.liveness())
             .subscribe(result => {
-                this.result = result;
+                this.snackBar.open('Response: ' + result, 'OK', {
+                    duration: 2000
+                });
             }, err => {
                 console.log(err);
             });

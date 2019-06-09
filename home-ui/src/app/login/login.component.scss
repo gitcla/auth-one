@@ -1,14 +1,33 @@
 .card-login {
-    max-width: 320px;
+    max-width: 260px;
     margin: 0 auto;
-    margin-top: 24px;
+    margin-top: 60px;
 }
 
 .card-login-content {
-    min-height: 200px;
+    text-align: center;
+    min-height: 280px;
+}
+
+.avatar {
+    text-align: center;
+    color: #3c9c8f;
+}
+
+.form-login {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-login > * {
+    width: 100%;
 }
 
 .footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
     margin: 12px;
-    text-align: right;
+    color: #333;
 }

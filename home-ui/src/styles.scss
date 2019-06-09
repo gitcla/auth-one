@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 // Angular Material
-@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 ///////////////////////////////////////////////////////////////////////////
 // Font Awesome
@@ -12,7 +12,12 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 ///////////////////////////////////////////////////////////////////////////
 // Global styles
 body {
-    background-color: #eee;
+    // background-color: #eee;
+    // background: rgb(242,242,249);
+    // background: linear-gradient(141deg, rgba(242,242,249,1) 0%, rgba(195,195,245,1) 11%, rgba(8,207,247,1) 100%);
     margin: 0;
     padding: 0;
+    background: #a8c0ff;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #3f2b96, #a8c0ff);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #3f2b96, #a8c0ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
 }

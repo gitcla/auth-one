@@ -1,0 +1,15 @@
+.main-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    -webkit-box-shadow: -5px 6px 30px 0px rgba(0,0,0,0.52);
+    -moz-box-shadow: -5px 6px 30px 0px rgba(0,0,0,0.52);
+    box-shadow: -5px 6px 30px 0px rgba(0,0,0,0.52);
+}
+
+.main-toolbar a {
+    color: white;
+    text-decoration: none;
+}

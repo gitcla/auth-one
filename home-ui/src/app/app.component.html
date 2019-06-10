@@ -1,9 +1,5 @@
-<mat-toolbar color="primary" class="main-toolbar">
-    <mat-toolbar-row>
-        <i class="fas fa-key"></i>&nbsp;&nbsp; Auth One
-    </mat-toolbar-row>
-</mat-toolbar>
+<app-main-toolbar></app-main-toolbar>
 
 <router-outlet></router-outlet>
 
-<mat-progress-bar mode="indeterminate" color="warn" class="progress-bar" *ngIf="isSpinning | async"></mat-progress-bar>
+<app-progress-bar></app-progress-bar>

@@ -10,17 +10,26 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatExpansionModule } from '@angular/material/expansion';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './services/auth.service';
 import { LoadingService } from './services/loading.service';
+import { HomeComponent } from './home/home.component';
+import { TokenVisualizerComponent } from './token-visualizer/token-visualizer.component';
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
+import { MainToolbarComponent } from './main-toolbar/main-toolbar.component';
 
 @NgModule({
     declarations: [
         LoginComponent,
+        HomeComponent,
+        TokenVisualizerComponent,
+        ProgressBarComponent,
+        ErrorPageComponent,
+        MainToolbarComponent,
         AppComponent
     ],
     imports: [
@@ -36,7 +45,6 @@ import { LoadingService } from './services/loading.service';
         MatFormFieldModule,
         MatInputModule,
         MatSnackBarModule,
-        MatExpansionModule,
 
         AppRoutingModule
     ],

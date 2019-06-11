@@ -1,8 +1,15 @@
 <mat-card class="card-token-visualizer">
     <mat-card-title>
-        Your token
+        Welcome NAME SURNAME
     </mat-card-title>
     <mat-card-content>
-        Show the token here
+        <div class="token-text">
+            {{ token }}
+        </div>
     </mat-card-content>
+    <mat-card-actions style="text-align: center">
+        <button mat-raised-button color="primary" (click)="reload()">RELOAD</button>
+        <button mat-raised-button color="accent" (click)="logout()">LOGOUT</button>
+        <button mat-raised-button color="warn" (click)="revokeAll()">REVOKE ALL</button>
+    </mat-card-actions>
 </mat-card>

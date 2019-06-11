@@ -21,6 +21,7 @@ import { TokenVisualizerComponent } from './token-visualizer/token-visualizer.co
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { MainToolbarComponent } from './main-toolbar/main-toolbar.component';
+import { AuthGuard } from './guards/auth-guard.service';
 
 @NgModule({
     declarations: [
@@ -50,7 +51,8 @@ import { MainToolbarComponent } from './main-toolbar/main-toolbar.component';
     ],
     providers: [
         AuthService,
-        LoadingService
+        LoadingService,
+        AuthGuard
     ],
     bootstrap: [AppComponent]
 })

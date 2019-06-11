@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
 @Component({
     selector: 'app-token-visualizer',
@@ -7,7 +8,31 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TokenVisualizerComponent implements OnInit {
 
-    constructor() { }
+    token = '';
 
-    ngOnInit() { }
+    constructor(private authService: AuthService) { }
+
+    ngOnInit() {
+        this.token = this.formatToken(this.authService.getToken());
+    }
+
+    reload(): void {
+    }
+
+    logout(): void {
+    }
+
+    revokeAll(): void {
+    }
+
+    private formatToken(token: string): string {
+        const parts: string[] = [];
+        let pos = 0;
+        const chars = 80;
+        while (pos < token.length) {
+            parts.push(token.substr(pos, 80));
+            pos = pos + chars;
+        }
+        return parts.join('\n');
+    }
 }

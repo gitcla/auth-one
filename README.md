@@ -40,7 +40,7 @@ MONGO_POD_NAME=$(kubectl get pods -l component=mongo -o custom-columns=:metadata
 kubectl port-forward $MONGO_POD_NAME 27017:27017
 ```
 
-Now you can point Robo 3T to localhost:27017 and create a new database called ```authone```.
+Now you can point Robo 3T to localhost:27017 and create a new database called ```authone```
 
 Create a new collection called ```users``` with the following document:
 
@@ -53,7 +53,7 @@ Create a new collection called ```users``` with the following document:
 
 ```
 
-The password associated for the user is **```secure```**.
+The password associated for the user is **```secure```**
 
 Now you are ready to start all the other services, for semplicity you can launch the following scripts:
 
@@ -65,9 +65,8 @@ Now you are ready to start all the other services, for semplicity you can launch
 ### TODO
 
 * [ ] Write a script to initialize Mongo database and populate users collection with sample data
-* [ ] Add version endpoint to auth API
 * [ ] Configure indexes on collections
-* [ ] Filter calls to liveness and readiness endpoints on reverse-proxy
+* [ ] Add schema of architecture
 * [ ] Review nginx.conf
 * [ ] Implement roles-service
 * [ ] Implement users-service

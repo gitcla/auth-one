@@ -4,5 +4,11 @@
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
+    },
+    "/api/whoami/*": {
+        "target": "http://192.168.99.107:80",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
     }
 }

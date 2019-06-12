@@ -1,6 +1,6 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -22,6 +22,8 @@ import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { MainToolbarComponent } from './main-toolbar/main-toolbar.component';
 import { AuthGuard } from './guards/auth-guard.service';
+import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { WhoamiService } from './services/whoami.service';
 
 @NgModule({
     declarations: [
@@ -52,7 +54,9 @@ import { AuthGuard } from './guards/auth-guard.service';
     providers: [
         AuthService,
         LoadingService,
-        AuthGuard
+        AuthGuard,
+        WhoamiService,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }
     ],
     bootstrap: [AppComponent]
 })

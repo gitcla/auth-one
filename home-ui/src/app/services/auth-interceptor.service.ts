@@ -2,12 +2,13 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/c
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
-import { catchError, switchMap, skip } from 'rxjs/operators';
+import { catchError, switchMap, skip, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
+    // TODO: use constants
     private static readonly UnauthenticatedUrls = [
         '/api/auth/token/refresh', // token for this call should be injected by the interceptor
         '/api/auth/login',
@@ -76,6 +77,7 @@ export class AuthInterceptorService implements HttpInterceptor {
         return this.authService.getToken()
             .pipe(
                 skip(1),
+                take(1),
                 switchMap(newToken => {
                     if (newToken === null) {
                         console.log('no new token received, could not handle parallel call', req.url);

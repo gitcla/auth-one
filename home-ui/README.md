@@ -1,9 +1,9 @@
 ### TODO
 
 - [ ] Add user infos on top navbar
+- [ ] Custom favicon
 - [ ] Test interceptor for multiple parallel calls
 - [ ] Use a custom font
-- [ ] Custom favicon
 - [ ] Dockerize the application with a multi stage building
 
 ## Code scaffolding

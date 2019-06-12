@@ -10,10 +10,10 @@ export class AuthInterceptorService implements HttpInterceptor {
 
     // TODO: use constants
     private static readonly UnauthenticatedUrls = [
-        '/api/auth/token/refresh', // token for this call should be injected by the interceptor
-        '/api/auth/login',
-        '/api/auth/liveness',
-        '/api/auth/version'
+        AuthService.API_AUTH + '/token/refresh', // token for this call shouldn't be injected by the interceptor
+        AuthService.API_AUTH + '/login',
+        AuthService.API_AUTH + '/liveness',
+        AuthService.API_AUTH + '/version'
     ];
 
     private isRefreshing = false;

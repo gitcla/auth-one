@@ -6,9 +6,10 @@ import { tap } from 'rxjs/operators';
 @Injectable()
 export class AuthService {
 
-    private static readonly API_AUTH = '/api/auth';
     private static readonly AUTH_TOKEN_KEY = 'authToken';
     private static readonly TextResponse = 'text' as 'json'; // see: https://github.com/angular/angular/issues/18586
+
+    public static readonly API_AUTH = '/api/auth';
 
     private readonly tokenSubject = new BehaviorSubject<string>(window.localStorage.getItem(AuthService.AUTH_TOKEN_KEY));
 

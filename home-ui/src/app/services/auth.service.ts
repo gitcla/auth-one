@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -44,9 +44,7 @@ export class AuthService {
             { responseType: AuthService.TextResponse })
             .pipe(
                 tap(token => {
-                    window.localStorage.setItem(AuthService.AUTH_TOKEN_KEY, token);
-                    this.tokenSubject.next(token);
-                    return token;
+                    this.setToken(token);
                 })
             );
     }
@@ -56,20 +54,33 @@ export class AuthService {
             responseType: AuthService.TextResponse
         }).pipe(
             tap(_ => {
-                window.localStorage.removeItem(AuthService.AUTH_TOKEN_KEY);
-                this.tokenSubject.next(null);
+                this.deleteToken();
             })
         );
     }
 
     refresh(): Observable<string> {
+        // we don't inject the token on the interceptor
+        const httpHeaders = new HttpHeaders()
+            .set('Authorization', 'Bearer ' + this.getTokenValue());
+
         return this.http.get<string>(`${AuthService.API_AUTH}/token/refresh`, {
-            responseType: AuthService.TextResponse
+            responseType: AuthService.TextResponse,
+            headers: httpHeaders
         }).pipe(
             tap(token => {
-                window.localStorage.setItem(AuthService.AUTH_TOKEN_KEY, token);
-                this.tokenSubject.next(token);
+                this.setToken(token);
             })
         );
+    }
+
+    deleteToken(): void {
+        window.localStorage.removeItem(AuthService.AUTH_TOKEN_KEY);
+        this.tokenSubject.next(null);
+    }
+
+    private setToken(token: string): void {
+        window.localStorage.setItem(AuthService.AUTH_TOKEN_KEY, token);
+        this.tokenSubject.next(token);
     }
 }

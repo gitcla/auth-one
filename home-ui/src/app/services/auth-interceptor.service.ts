@@ -2,18 +2,22 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/c
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap, skip } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
     private static readonly UnauthenticatedUrls = [
+        '/api/auth/token/refresh', // token for this call should be injected by the interceptor
         '/api/auth/login',
         '/api/auth/liveness',
         '/api/auth/version'
     ];
 
-    constructor(private authService: AuthService) {
+    private isRefreshing = false;
+
+    constructor(private authService: AuthService, private router: Router) {
         console.log('ctor interceptor');
     }
 
@@ -22,25 +26,73 @@ export class AuthInterceptorService implements HttpInterceptor {
             return next.handle(req);
         }
 
-        console.log('auth request');
-        // TODO: we must manage an isRefreshing flag or use the observable
-        return next.handle(this.addToken(req)).pipe(
-            catchError(error => {
-                if (error.status !== 401) { throw error; }
+        console.log('intercept request', req.url);
 
-                return this.authService.refresh().pipe(
-                    switchMap(newToken => {
-                        return next.handle(this.addToken(req));
-                    })
-                );
-            })
-        );
+        if (this.isRefreshing) {
+            return this.nextOnNewToken(req, next);
+        }
+
+        return next.handle(this.addToken(req, this.authService.getTokenValue()))
+            .pipe(
+                catchError(error => {
+                    if (error.status !== 401) { throw error; }
+
+                    console.log('handling 401 for request', req.url);
+
+                    if (this.isRefreshing) {
+                        return this.nextOnNewToken(req, next);
+                    }
+
+                    this.isRefreshing = true;
+
+                    return this.authService.refresh()
+                        .pipe(
+                            switchMap(newToken => {
+                                console.log('token refresh handled successfully');
+
+                                this.isRefreshing = false;
+
+                                return next.handle(this.addToken(req, newToken));
+                            }),
+                            catchError(err => {
+                                // if something goes wrong here we delete the token
+                                console.log('error during token refresh');
+
+                                this.authService.deleteToken();
+                                this.isRefreshing = false;
+
+                                this.router.navigate(['/login']);
+
+                                throw err;
+                            })
+                        );
+                })
+            );
     }
 
-    private addToken(req: HttpRequest<any>): HttpRequest<any> {
+    private nextOnNewToken(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        console.log('parallel call detected, wait for the new token on req', req.url);
+
+        return this.authService.getToken()
+            .pipe(
+                skip(1),
+                switchMap(newToken => {
+                    if (newToken === null) {
+                        console.log('no new token received, could not handle parallel call', req.url);
+                        throw new Error('No new token received');
+                    }
+
+                    console.log('parallel call handled successfully', req.url);
+
+                    return next.handle(this.addToken(req, newToken));
+                })
+            );
+    }
+
+    private addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
         return req.clone({
             setHeaders: {
-                Authorization: 'Bearer ' + this.authService.getTokenValue()
+                Authorization: 'Bearer ' + token
             }
         });
     }

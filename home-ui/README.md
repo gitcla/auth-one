@@ -1,10 +1,9 @@
 ### TODO
 
-- [ ] Implement the login page
-- [ ] Implement the home page
-- [ ] Implement the interceptor
-- [ ] Custom favicon
+- [ ] Add user infos on top navbar
+- [ ] Test interceptor for multiple parallel calls
 - [ ] Use a custom font
+- [ ] Custom favicon
 - [ ] Dockerize the application with a multi stage building
 
 ## Code scaffolding

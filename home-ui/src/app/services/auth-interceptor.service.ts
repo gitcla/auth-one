@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-    // TODO: use constants
     private static readonly UnauthenticatedUrls = [
         AuthService.API_AUTH + '/token/refresh', // token for this call shouldn't be injected by the interceptor
         AuthService.API_AUTH + '/login',
@@ -42,31 +41,37 @@ export class AuthInterceptorService implements HttpInterceptor {
 
                     if (this.isRefreshing) {
                         return this.nextOnNewToken(req, next);
+                    } else {
+                        this.isRefreshing = true;
+
+                        return this.handleRefresh(req, next);
                     }
+                })
+            );
+    }
 
-                    this.isRefreshing = true;
+    private handleRefresh(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        console.log('handle refresh');
 
-                    return this.authService.refresh()
-                        .pipe(
-                            switchMap(newToken => {
-                                console.log('token refresh handled successfully');
+        return this.authService.refresh()
+            .pipe(
+                switchMap(newToken => {
+                    console.log('token refresh handled successfully');
 
-                                this.isRefreshing = false;
+                    this.isRefreshing = false;
 
-                                return next.handle(this.addToken(req, newToken));
-                            }),
-                            catchError(err => {
-                                // if something goes wrong here we delete the token
-                                console.log('error during token refresh');
+                    return next.handle(this.addToken(req, newToken));
+                }),
+                catchError(err => {
+                    // if something goes wrong here we delete the token
+                    console.log('error during token refresh');
 
-                                this.authService.deleteToken();
-                                this.isRefreshing = false;
+                    this.authService.deleteToken();
+                    this.isRefreshing = false;
 
-                                this.router.navigate(['/login']);
+                    this.router.navigate(['/login']);
 
-                                throw err;
-                            })
-                        );
+                    throw err;
                 })
             );
     }

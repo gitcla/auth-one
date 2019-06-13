@@ -1,0 +1,8 @@
+<div mat-dialog-content>
+    <i class="fas fa-user-alt fa-4x user-avatar"></i>
+    Welcome {{ userData?.fullName }}<br>
+    {{ userData?.username }}
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="logout()"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
+</div>

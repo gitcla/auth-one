@@ -1,5 +1,12 @@
 <mat-toolbar color="primary" class="main-toolbar">
     <mat-toolbar-row>
-        <a routerLink="/" routerLinkActive="active-link"><i class="fas fa-key"></i>&nbsp;&nbsp; Auth One</a>
+        <span>
+            <a routerLink="/" routerLinkActive="active-link"><i class="fas fa-key"></i>&nbsp;&nbsp; Auth One</a>
+        </span>
+
+        <!-- This fills the remaining space of the current row -->
+        <span class="space-filler"></span>
+
+        <button mat-icon-button (click)="openUserDetailsDialog()"><i class="fas fa-user-circle fa-2x user-avatar"></i></button>
     </mat-toolbar-row>
 </mat-toolbar>

@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,6 +25,7 @@ import { MainToolbarComponent } from './main-toolbar/main-toolbar.component';
 import { AuthGuard } from './guards/auth-guard.service';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { WhoamiService } from './services/whoami.service';
+import { UserDetailsDialogComponent } from './main-toolbar/user-details-dialog.component';
 
 @NgModule({
     declarations: [
@@ -33,7 +35,11 @@ import { WhoamiService } from './services/whoami.service';
         ProgressBarComponent,
         ErrorPageComponent,
         MainToolbarComponent,
+        UserDetailsDialogComponent,
         AppComponent
+    ],
+    entryComponents: [
+        UserDetailsDialogComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -48,6 +54,7 @@ import { WhoamiService } from './services/whoami.service';
         MatFormFieldModule,
         MatInputModule,
         MatSnackBarModule,
+        MatDialogModule,
 
         AppRoutingModule
     ],

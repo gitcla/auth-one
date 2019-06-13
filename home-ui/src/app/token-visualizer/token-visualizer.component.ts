@@ -53,6 +53,15 @@ export class TokenVisualizerComponent implements OnInit {
     }
 
     revokeAll(): void {
+        this.authService.revokeAll()
+            .subscribe(_ => {
+                this.router.navigate(['/login']);
+            }, err => {
+                console.error(err);
+                this.snackBar.open('Error during revokeAll', 'OK', {
+                    duration: 3000
+                });
+            });
     }
 
     private formatToken(token: string): string {

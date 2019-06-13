@@ -8,8 +8,14 @@
         </div>
     </mat-card-content>
     <mat-card-actions style="text-align: center">
-        <button mat-raised-button color="primary" (click)="reload()">RELOAD</button>
-        <button mat-raised-button color="accent" (click)="logout()">LOGOUT</button>
-        <button mat-raised-button color="warn" (click)="revokeAll()">REVOKE ALL</button>
+        <button mat-raised-button color="primary" (click)="reload()">
+            <i class="fas fa-sync-alt"></i> RELOAD
+        </button>
+        <button mat-raised-button color="accent" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i> LOGOUT
+        </button>
+        <button mat-raised-button color="warn" (click)="revokeAll()">
+            <i class="far fa-times-circle"></i> REVOKE ALL
+        </button>
     </mat-card-actions>
 </mat-card>

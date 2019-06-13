@@ -60,6 +60,16 @@ export class AuthService {
         );
     }
 
+    revokeAll(): Observable<void> {
+        return this.http.get<void>(`${AuthService.API_AUTH}/token/revoke-all`, {
+            responseType: AuthService.TextResponse
+        }).pipe(
+            tap(_ => {
+                this.deleteToken();
+            })
+        );
+    }
+
     refresh(): Observable<string> {
         // we don't inject the token on the interceptor
         const httpHeaders = new HttpHeaders()

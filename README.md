@@ -64,6 +64,7 @@ Now you are ready to start all the other services, for semplicity you can launch
 
 ### TODO
 
+* [ ] Add screenshot to documentation
 * [ ] Write a script to initialize Mongo database and populate users collection with sample data
 * [ ] Configure indexes on collections
 * [ ] Add schema of architecture

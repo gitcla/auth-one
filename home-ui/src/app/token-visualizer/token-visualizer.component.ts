@@ -67,9 +67,9 @@ export class TokenVisualizerComponent implements OnInit {
     private formatToken(token: string): string {
         const parts: string[] = [];
         let pos = 0;
-        const chars = 80;
+        const chars = 60;
         while (pos < token.length) {
-            parts.push(token.substr(pos, 80));
+            parts.push(token.substr(pos, chars));
             pos = pos + chars;
         }
         return parts.join('\n');

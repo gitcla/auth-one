@@ -1,11 +1,23 @@
 .card-token-visualizer {
-    width: 70%;
+    width: 560px;
     margin: 0 auto;
     margin-top: 32px;
     color: #444;
 }
 
 .token-text {
+    margin-top: 12px;
     font-family: monospace;
+    white-space: pre-line;
     font-size: 15px;
+}
+
+.card-token-visualizer-title {
+    background-image: url('/assets/material-bg-3.jpg');
+    color: white;
+}
+
+.card-token-visualizer-title > p {
+    position: absolute;
+    bottom: 0;
 }

@@ -1,6 +1,17 @@
 .card-description {
-    width: 70%;
+    width: 560px;
+    min-height: 360px;
     margin: 0 auto;
     margin-top: 32px;
     color: #444;
+}
+
+.card-description-title {
+    background-image: url('/assets/material-bg-2.jpg');
+    color: white;
+}
+
+.card-description-title > p {
+    position: absolute;
+    bottom: 0;
 }

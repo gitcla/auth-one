@@ -1,15 +1,23 @@
 <mat-card class="card-description">
-    <mat-card-title>
-        JWT token management on a Kubernetes Cluster
+    <mat-card-title class="card-header-box card-description-title">
+        <p>JWT token management on a Kubernetes Cluster</p>
     </mat-card-title>
-    <mat-card-content>
+    <mat-card-content class="card-content-box">
         <p>
-            An implementation of the JWT token protocol on a distributed microservice architecture
+            This is a proof of concept implementation of the JWT standard on a distributed microservice architecture
             deployed with Kubernetes.
         </p>
         <p>
-            Tokens are signed with an RSA private key so other microservices can verify the authenticity using the
-            public key.
+            JWT tokens are signed with an RSA private key so other microservices can verify the authenticity using the
+            public key. Tokens are configured to expire after a configurable period and can be refreshed with a specific
+            call to the API.
+        </p>
+        <p>
+            It can be used as a starting point to develop a new application. Please note that not all the configurations
+            are well suited for a production environment.
+        </p>
+        <p>
+            Source code is available on <a href="https://github.com/gitcla/auth-one">GitHub</a>
         </p>
     </mat-card-content>
 </mat-card>

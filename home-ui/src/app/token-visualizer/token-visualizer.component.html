@@ -1,11 +1,13 @@
 <mat-card class="card-token-visualizer">
-    <mat-card-title>
-        Welcome {{ userData?.fullName }}
+    <mat-card-title class="card-header-box card-token-visualizer-title">
+        <p>Welcome {{ userData?.fullName }}</p>
     </mat-card-title>
-    <mat-card-content>
-        <div class="token-text">
+    <mat-card-content class="card-content-box">
+
+        Your current JWT token
+        <p class="token-text">
             {{ token }}
-        </div>
+        </p>
     </mat-card-content>
     <mat-card-actions style="text-align: center">
         <button mat-raised-button color="primary" (click)="reload()">

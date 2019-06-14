@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserDetailsDialogComponent } from './user-details-dialog.component';
+import { AuthService } from '../services/auth.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-main-toolbar',
@@ -9,9 +12,17 @@ import { UserDetailsDialogComponent } from './user-details-dialog.component';
 })
 export class MainToolbarComponent implements OnInit {
 
-    constructor(public dialog: MatDialog) { }
+    isLoggedIn: Observable<boolean>;
 
-    ngOnInit() { }
+    constructor(private dialog: MatDialog, private authService: AuthService) { }
+
+    ngOnInit() {
+        this.isLoggedIn = this.authService.getToken().pipe(
+            map(token => {
+                return token !== null;
+            })
+        );
+    }
 
     openUserDetailsDialog(): void {
         this.dialog.open(UserDetailsDialogComponent, {

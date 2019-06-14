@@ -7,6 +7,6 @@
         <!-- This fills the remaining space of the current row -->
         <span class="space-filler"></span>
 
-        <button mat-icon-button (click)="openUserDetailsDialog()"><i class="fas fa-user-circle fa-2x user-avatar"></i></button>
+        <button mat-icon-button (click)="openUserDetailsDialog()" *ngIf="isLoggedIn | async"><i class="fas fa-user-circle fa-2x user-avatar"></i></button>
     </mat-toolbar-row>
 </mat-toolbar>

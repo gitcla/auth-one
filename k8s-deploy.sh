@@ -13,9 +13,9 @@ kubectl create -f auth-service/k8s-deployment.yaml
 kubectl create -f whoami-service/k8s-service.yaml
 kubectl create -f whoami-service/k8s-deployment.yaml
 
-# ng-client
-kubectl create -f ng-client/k8s-service.yaml
-kubectl create -f ng-client/k8s-deployment.yaml
+# home-ui
+kubectl create -f home-ui/k8s-service.yaml
+kubectl create -f home-ui/k8s-deployment.yaml
 
 # reverse-proxy
 kubectl create configmap reverse-proxy-config --from-file=reverse-proxy/nginx.conf

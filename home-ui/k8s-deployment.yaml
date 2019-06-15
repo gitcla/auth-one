@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ng-client-dep
+  name: home-ui-dep
   labels:
-    component: ng-client
+    component: home-ui
     app: auth-one
 spec:
   replicas: 1
   selector:
     matchLabels:
-      component: ng-client
+      component: home-ui
   template:
     metadata:
       labels:
-        component: ng-client
+        component: home-ui
     spec:
       containers:
-      - name: ng-client-container
-        image: nginx:1.16.0
+      - name: home-ui-container
+        image: dockla/auth-one-home-ui:0.2.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 80

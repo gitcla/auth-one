@@ -68,6 +68,7 @@ Now you are ready to start all the other services, for semplicity you can launch
 * [ ] Write a script to initialize Mongo database and populate users collection with sample data
 * [ ] Configure indexes on collections
 * [ ] Add schema of architecture
+* [ ] If you hit reload on browser the app shouldn't return 404, use:  try_files $uri $uri/ /index.html;
 * [ ] Review nginx.conf
 * [ ] Implement roles-service
 * [ ] Implement users-service

@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ng-client-svc
+  name: home-ui-svc
   labels:
     app: auth-one
-    component: ng-client
+    component: home-ui
 spec:
   ports:
-  - port: 3000
+  - port: 3200
     targetPort: 80
     protocol: TCP
   selector:
-    component: ng-client
+    component: home-ui
   type: ClusterIP

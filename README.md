@@ -68,7 +68,6 @@ If all goes well, after a while you can connect to the login page:
 
 ### TODO
 
-* [ ] Add screenshot to documentation
 * [ ] Write a script to initialize Mongo database and populate users collection with sample data
 * [ ] Configure indexes on collections
 * [ ] Add schema of architecture

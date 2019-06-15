@@ -1,7 +1,5 @@
 # Auth One: JWT token management on a Kubernetes Cluster
 
-![Login Page](https://raw.githubusercontent.com/gitcla/auth-one/master/docs/images/login-page.jpg)
-
 This is a proof of concept implementation of the [JWT](https://jwt.io/) standard on a distributed microservice architecture deployed with [Kubernetes](https://kubernetes.io/).
 
 JWT tokens are signed with an RSA private key so other microservices can verify the authenticity using the public key.  Tokens are configured to expire after a configurable period and can be refreshed with a specific call to the API.
@@ -63,6 +61,10 @@ Now you are ready to start all the other services, for semplicity you can launch
 ./k8s-undeploy.sh
 ./k8s-deploy.sh
 ```
+
+If all goes well, after a while you can connect to the login page:
+
+![Login Page](https://raw.githubusercontent.com/gitcla/auth-one/master/docs/images/login-page.jpg)
 
 ### TODO
 

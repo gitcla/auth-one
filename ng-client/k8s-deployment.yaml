@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: ng-client-container
-        image: nginx:1.15.2
+        image: nginx:1.16.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 80

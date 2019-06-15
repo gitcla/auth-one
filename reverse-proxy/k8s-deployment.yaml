@@ -21,7 +21,7 @@ spec:
           name: reverse-proxy-config
       containers:
       - name: reverse-proxy-container
-        image: nginx:1.15.2
+        image: nginx:1.16.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 80

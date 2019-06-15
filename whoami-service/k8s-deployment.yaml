@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: whoami-container
-        image: dockla/auth-one-whoami:0.1
+        image: dockla/auth-one-whoami:0.2.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 80

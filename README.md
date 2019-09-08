@@ -19,6 +19,8 @@ The system is composed of the following components:
 Every module is released as a Docker image and all the application can be deployed on Kubernetes using the configurations provided.
 You can use minikube to test it under a laptop.
 
+![Architecure scheme](https://raw.githubusercontent.com/gitcla/auth-one/master/docs/images/auth-one-scheme.png)
+
 ## Setup
 
 First you must have a Kubernetes installation up and running (you can use [minikube](https://github.com/kubernetes/minikube) to test it on a laptop).
@@ -68,9 +70,9 @@ If all goes well, after a while you can connect to the login page:
 
 ### TODO
 
+* [ ] Add database to the scheme
 * [ ] Write a script to initialize Mongo database and populate users collection with sample data
 * [ ] Configure indexes on collections
-* [ ] Add schema of architecture
 * [ ] If you hit reload on browser the app shouldn't return 404, use:  try_files $uri $uri/ /index.html;
 * [ ] Review nginx.conf
 * [ ] Implement roles-service

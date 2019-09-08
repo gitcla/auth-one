@@ -19,7 +19,7 @@ The system is composed of the following components:
 Every module is released as a Docker image and all the application can be deployed on Kubernetes using the configurations provided.
 You can use minikube to test it under a laptop.
 
-![Architecure scheme](https://github.com/gitcla/auth-one/blob/master/docs/images/auth-one-scheme.png)
+![Architecure scheme](https://raw.githubusercontent.com/gitcla/auth-one/master/docs/images/auth-one-scheme.png)
 
 ## Setup
 
